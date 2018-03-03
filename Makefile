@@ -16,7 +16,9 @@ build: test
 zip: build
 	cd out && zip handler.zip lambda_handler
 
-deploy: out/handler.zip
+out/handler.zip: zip
+
+create-function: out/handler.zip
 	aws lambda create-function \
   		--region us-west-1 \
   		--function-name apthunt \
@@ -26,6 +28,13 @@ deploy: out/handler.zip
   		--zip-file fileb://$(PWD)/out/handler.zip \
   		--handler lambda_handler \
 		--tags project=apthunt,testing=true
+
+delete-function:
+	aws lambda delete-function \
+		--region us-west-1 \
+		--function-name apthunt
+
+re-create-function: delete-function create-function
 
 clean:
 	rm -rf out
