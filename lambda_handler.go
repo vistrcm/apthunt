@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/lambdacontext"
+
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-xray-sdk-go/xray"
 )
@@ -23,6 +25,10 @@ func HandleRequest(ctx context.Context, name myEvent) (MyResponse, error) {
 		LogLevel:       "info", // default
 		ServiceVersion: "1.2.3",
 	})
+
+	lc, _ := lambdacontext.FromContext(ctx)
+	log.print(lc.Identity.CognitoIdentityPoolID)
+
 	return MyResponse{Message: fmt.Sprintf("Who are you, %s?", name.Name)}, nil
 }
 
