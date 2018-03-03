@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/aws/aws-lambda-go/lambdacontext"
 
@@ -27,7 +28,7 @@ func HandleRequest(ctx context.Context, name myEvent) (MyResponse, error) {
 	})
 
 	lc, _ := lambdacontext.FromContext(ctx)
-	log.print(lc.Identity.CognitoIdentityPoolID)
+	log.Print(lc.Identity.CognitoIdentityPoolID)
 
 	return MyResponse{Message: fmt.Sprintf("Who are you, %s?", name.Name)}, nil
 }
