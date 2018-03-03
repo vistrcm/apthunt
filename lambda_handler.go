@@ -5,10 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/aws/aws-lambda-go/lambdacontext"
-
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 type myEvent struct {
@@ -22,15 +19,9 @@ type MyResponse struct {
 
 // HandleRequest of some kind
 func HandleRequest(ctx context.Context, name myEvent) (MyResponse, error) {
-	xray.Configure(xray.Config{
-		LogLevel:       "info", // default
-		ServiceVersion: "1.2.3",
-	})
-
-	lc, _ := lambdacontext.FromContext(ctx)
-	log.Print(lc.Identity.CognitoIdentityPoolID)
-
+	log.Println("wowowowo function")
 	return MyResponse{Message: fmt.Sprintf("Who are you, %s?", name.Name)}, nil
+
 }
 
 func main() {

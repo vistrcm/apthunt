@@ -11,66 +11,9 @@
   revision = "fafa7e49388b8991caf99308e80655ba91816b72"
   version = "v1.1.0"
 
-[[projects]]
-  name = "github.com/aws/aws-sdk-go"
-  packages = [
-    "aws",
-    "aws/awserr",
-    "aws/awsutil",
-    "aws/client",
-    "aws/client/metadata",
-    "aws/corehandlers",
-    "aws/credentials",
-    "aws/ec2metadata",
-    "aws/endpoints",
-    "aws/request",
-    "internal/sdkrand",
-    "internal/shareddefaults"
-  ]
-  revision = "aace5875a5c3b85a3902c6d72b9caed301d64cce"
-  version = "v1.13.8"
-
-[[projects]]
-  name = "github.com/aws/aws-xray-sdk-go"
-  packages = [
-    "header",
-    "internal/plugins",
-    "pattern",
-    "resources",
-    "strategy/ctxmissing",
-    "strategy/exception",
-    "strategy/sampling",
-    "xray"
-  ]
-  revision = "32670489212454717deeafb8da5dbb1da0299749"
-  version = "v0.9.4"
-
-[[projects]]
-  name = "github.com/cihub/seelog"
-  packages = ["."]
-  revision = "d2c6e5aa9fbfdd1c624e140287063c7730654115"
-  version = "v2.6"
-
-[[projects]]
-  name = "github.com/go-ini/ini"
-  packages = ["."]
-  revision = "32e4c1e6bc4e7d0d8451aa6b75200d19e37a536a"
-  version = "v1.32.0"
-
-[[projects]]
-  name = "github.com/jmespath/go-jmespath"
-  packages = ["."]
-  revision = "0b12d6b5"
-
-[[projects]]
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a7d646c9215e7e666b29aaae3e0ddacec0d3f88ac2c2c800404e5630517f1d2a"
+  inputs-digest = "99590d904e6f24342d045e124d7ecef7717674285cea60ceaa0e1884f614f083"
   solver-name = "gps-cdcl"
   solver-version = 1
