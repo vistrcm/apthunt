@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: parser for apthunt
+
+Resources:
+
+  ApthuntParser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: parser.handler
+      Runtime: python3.6
+      Events:
+        ListApts:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+        CreateApt:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
