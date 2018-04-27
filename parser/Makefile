@@ -7,12 +7,20 @@ REGION = us-west-1
 # some for testing
 TESTDATE= `date +'%y.%m.%d %H:%M:%S'`
 
-all: zip
+all: check zip
 
 clean:
 	rm -rf $(OUTDIR)
 
 cleanall: clean delete-function
+
+pycodestyle:
+	pipenv run pycodestyle --show-source --show-pep8 ./
+
+pylint:
+	pipenv run pylint *.py
+
+check: pycodestyle pylint
 
 zip: parser.py out_dir
 	zip $(OUTDIR)/parser.zip parser.py
