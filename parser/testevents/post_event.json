@@ -1,5 +1,5 @@
 {
-  "body": "FeedTitle: {{FeedTitle}}\nFeedUrl: {{FeedUrl}}\nPostTitle: {{PostTitle}}\nPostUrl: {{PostUrl}}\nPostContent: {{PostContent}}\nPostPublished: {{PostPublished}}\n",
+  "body": "http://stas.vitko.me",
   "resource": "/{proxy+}",
   "requestContext": {
     "resourceId": "123456",

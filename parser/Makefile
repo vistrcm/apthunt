@@ -28,7 +28,7 @@ test-sam: check
 test-py: test.py
 	pipenv run python -m unittest discover -v
 
-test: check test-sam test-py
+test: check test-py test-sam
 
 zip: parser.py out_dir
 	zip $(OUTDIR)/parser.zip parser.py
