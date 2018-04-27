@@ -11,21 +11,41 @@ def respond(err, res=None):
     """helper function to create valid proxy object for AWS lambda + proxy gateway"""
     return {
         'statusCode': '400' if err else '200',
-        'body': err.message if err else json.dumps(res),
+        'body': str(err) if err else json.dumps(res),
         'headers': {
             'Content-Type': 'application/json',
         },
     }
 
 
-def handler(event, _):
+def parse_body(body):
+    """parse request body. return restulting dict.
+
+    request body should be in format of lines
+    key1: value1
+    key2: value2
+    ...
+
+    returns same in form of dict"""
+
+    result = {}
+    for raw_line in body.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        key, value = line.split(":")
+        result[key] = value.strip()
+    return result
+
+
+def handler(event, context):
     """request handler"""
+    LOGGER.debug(context)
     LOGGER.debug(event)
-    # print all keys in body
-    LOGGER.debug("received keys: %s", [key for key in event["body"].keys()])
-    LOGGER.debug("FeedTitle: %s", event["body"]["FeedTitle"])
-    LOGGER.debug("FeedUrl: %s", event["body"]["FeedUrl"])
-    LOGGER.debug("PostUrl: %s", event["body"]["PostUrl"])
-    LOGGER.debug("PostContent: %s", event["body"]["PostContent"])
-    LOGGER.debug("PostPublished: %s", event["body"]["PostPublished"])
+
+    if (event["body"] is None) or (not event["body"]):
+        return respond(ValueError("looks like body is empty"))
+
+    data = parse_body(event["body"])
+    LOGGER.info("data: %s", data)
     return respond(None, event)
