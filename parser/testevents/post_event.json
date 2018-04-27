@@ -1,5 +1,5 @@
 {
-  "body": "postevent wowowow",
+  "body": "FeedTitle: {{FeedTitle}}\nFeedUrl: {{FeedUrl}}\nPostTitle: {{PostTitle}}\nPostUrl: {{PostUrl}}\nPostContent: {{PostContent}}\nPostPublished: {{PostPublished}}\n",
   "resource": "/{proxy+}",
   "requestContext": {
     "resourceId": "123456",
