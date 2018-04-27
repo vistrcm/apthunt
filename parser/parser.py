@@ -1,8 +1,11 @@
+"""lambda created to get some urls as input, retrieve URL content, parse it and save."""
+
 import logging
 import json
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
 
 def respond(err, res=None):
     return {
@@ -12,6 +15,7 @@ def respond(err, res=None):
             'Content-Type': 'application/json',
         },
     }
+
 
 def handler(event, context):
     """request handler"""
