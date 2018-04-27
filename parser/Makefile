@@ -7,20 +7,28 @@ REGION = us-west-1
 # some for testing
 TESTDATE= `date +'%y.%m.%d %H:%M:%S'`
 
-all: clean check zip
+all: clean test zip
 
 clean:
 	rm -rf $(OUTDIR)
 
 cleanall: clean delete-function
 
-pycodestyle:
-	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle ./
+pycodestyle: parser.py
+	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle parser.py
 
-pylint:
-	pipenv run pylint *.py
+pylint: parser.py
+	pipenv run pylint parser.py
 
 check: pycodestyle pylint
+
+test-sam: check
+	./test-sam.sh
+
+test-py: test.py
+	pipenv run python -m unittest discover -v
+
+test: check test-sam test-py
 
 zip: parser.py out_dir
 	zip $(OUTDIR)/parser.zip parser.py
