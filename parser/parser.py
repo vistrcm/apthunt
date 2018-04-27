@@ -18,26 +18,6 @@ def respond(err, res=None):
     }
 
 
-def parse_body(body):
-    """parse request body. return restulting dict.
-
-    request body should be in format of lines
-    key1: value1
-    key2: value2
-    ...
-
-    returns same in form of dict"""
-
-    result = {}
-    for raw_line in body.splitlines():
-        line = raw_line.strip()
-        if not line:
-            continue
-        key, value = line.split(":")
-        result[key] = value.strip()
-    return result
-
-
 def handler(event, context):
     """request handler"""
     LOGGER.debug(context)
@@ -46,6 +26,7 @@ def handler(event, context):
     if (event["body"] is None) or (not event["body"]):
         return respond(ValueError("looks like body is empty"))
 
-    data = parse_body(event["body"])
-    LOGGER.info("data: %s", data)
+    post_url = event["body"].strip()
+
+    LOGGER.info("post_url: %s", post_url)
     return respond(None, event)
