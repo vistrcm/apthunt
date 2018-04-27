@@ -3,11 +3,12 @@
 import logging
 import json
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.DEBUG)
 
 
 def respond(err, res=None):
+    """helper function to create valid proxy object for AWS lambda + proxy gateway"""
     return {
         'statusCode': '400' if err else '200',
         'body': err.message if err else json.dumps(res),
@@ -17,8 +18,14 @@ def respond(err, res=None):
     }
 
 
-def handler(event, context):
+def handler(event, _):
     """request handler"""
-    logger.debug(event)
-
+    LOGGER.debug(event)
+    # print all keys in body
+    LOGGER.debug("received keys: %s", [key for key in event["body"].keys()])
+    LOGGER.debug("FeedTitle: %s", event["body"]["FeedTitle"])
+    LOGGER.debug("FeedUrl: %s", event["body"]["FeedUrl"])
+    LOGGER.debug("PostUrl: %s", event["body"]["PostUrl"])
+    LOGGER.debug("PostContent: %s", event["body"]["PostContent"])
+    LOGGER.debug("PostPublished: %s", event["body"]["PostPublished"])
     return respond(None, event)
