@@ -15,7 +15,7 @@ clean:
 cleanall: clean delete-function
 
 pycodestyle:
-	pipenv run pycodestyle --show-source --show-pep8 ./
+	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle ./
 
 pylint:
 	pipenv run pylint *.py
