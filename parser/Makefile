@@ -7,7 +7,7 @@ REGION = us-west-1
 # some for testing
 TESTDATE= `date +'%y.%m.%d %H:%M:%S'`
 
-all: check zip
+all: clean check zip
 
 clean:
 	rm -rf $(OUTDIR)
