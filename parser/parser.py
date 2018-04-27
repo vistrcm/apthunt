@@ -9,8 +9,8 @@ import boto3
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
 
-DYNAMO = boto3.client('dynamodb')
-TABLE = DYNAMO.Table('apthunt')
+DYNAMO = boto3.resource('dynamodb')
+TABLE = DYNAMO.Table("apthunt")
 
 
 def respond(err, res=None):
@@ -68,11 +68,11 @@ def put_item(item):
     """put item into dynamodb table.
 
     will add fields `added` and `intid`.
-    `added` equals to current time.
+    `added` equals to current time (unixtime in ms).
     `intid` - generated uuid4 working as primary key."""
     # extend a little bit
-    item["added"] = datetime.utcnow()
-    item["intid"] = uuid.uuid4()
+    item["added"] = int(datetime.utcnow().timestamp() * 1000)
+    item["intid"] = uuid.uuid4().int
 
     return TABLE.put_item(Item=item)
 
