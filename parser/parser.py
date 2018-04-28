@@ -52,7 +52,10 @@ def handler(event, context):
         'GET': lambda x: TABLE.scan(**x),
         'POST': put_item,
     }
-    body = event['body']
+    raw_body = event['body']
+
+    LOGGER.debug("raw_body: '%s'", raw_body)
+    body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json
 
     LOGGER.debug("body: '%s'", body)
 
