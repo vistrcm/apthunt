@@ -54,7 +54,7 @@ def handler(event, context):
     }
     body = event['body']
 
-    LOGGER.debug("body: %s", body)
+    LOGGER.debug("body: '%s'", body)
 
     operation = event['httpMethod']
     if operation in operations:
@@ -72,7 +72,7 @@ def put_item(item):
     `intid` - generated uuid4 working as primary key."""
     # extend a little bit
     item["added"] = int(datetime.utcnow().timestamp() * 1000)
-    item["intid"] = uuid.uuid4().int
+    item["intid"] = uuid.uuid4().hex
 
     return TABLE.put_item(Item=item)
 
