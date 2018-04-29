@@ -56,13 +56,18 @@ def handler(event, context):
     raw_body = event['body']
 
     LOGGER.debug("raw_body: '%s'", raw_body)
-    body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json
+    try:
+        body = parse_body(raw_body)
+    except JSONDecodeError as ex:
+        msg = "Could not parse body. Ex: '{}'".format(ex)
+        LOGGER.warning(msg)
+        respond(ValueError(msg))
 
     LOGGER.debug("body: '%s'", body)
 
     operation = event['httpMethod']
     if operation in operations:
-        payload = event['queryStringParameters'] if operation == 'GET' else json.loads(body)
+        payload = event['queryStringParameters'] if operation == 'GET' else body
         return respond(None, operations[operation](payload))
 
     return respond(ValueError('Unsupported method "{}"'.format(operation)))
