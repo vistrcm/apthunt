@@ -4,6 +4,7 @@ import logging
 import json
 from datetime import datetime
 import uuid
+from json.decoder import JSONDecodeError
 import boto3
 
 LOGGER = logging.getLogger()
@@ -65,6 +66,13 @@ def handler(event, context):
         return respond(None, operations[operation](payload))
 
     return respond(ValueError('Unsupported method "{}"'.format(operation)))
+
+
+def parse_body(raw_body):
+    """parse data represented as string to json"""
+    body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json'
+    body = json.loads(body)
+    return body
 
 
 def put_item(item):
