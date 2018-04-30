@@ -2,6 +2,7 @@ import unittest
 import random
 
 from parser import parse_body
+import json
 from json.decoder import JSONDecodeError
 
 class TestParser(unittest.TestCase):
@@ -18,11 +19,12 @@ class TestParser(unittest.TestCase):
 
     def test_parser_body_random_dict(self):
         td = {}
-        for _ in range(random.randint(-100, 100)):
+        for _ in range(random.randint(1, 111)):
             k = str(random.random())
             v = random.random()
             td[k] = v
-        self.assertEqual(parse_body(str(td)), td)
+        data = json.dumps(td)
+        self.assertEqual(parse_body(data), td)
 
 if __name__ == '__main__':
     unittest.main()
