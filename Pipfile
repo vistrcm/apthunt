@@ -4,10 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+requests-html = "*"
 
 [dev-packages]
 pylint = "*"
 pycodestyle = "*"
+"boto3" = "*"
 
 [requires]
 python_version = "3.6"
