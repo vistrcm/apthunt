@@ -1,10 +1,12 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
 
-import logging
-import json
 from datetime import datetime
-import uuid
+import json
 from json.decoder import JSONDecodeError
+import logging
+import uuid
+
+
 import boto3
 
 LOGGER = logging.getLogger()
