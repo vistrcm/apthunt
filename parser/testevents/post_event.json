@@ -1,5 +1,5 @@
 {
-  "body": "http://stas.vitko.me",
+  "body": "{ \"FeedTitle\": \"testing. new | and very cool titile  \", \"FeedUrl\": \"http://stas.vitko.me\", \"PostTitle\": \"largehunt\", \"PostUrl\": \"http://stas.vitko.me/q1\", \"PostContent\": \"new! super! get it!\", \"PostPublished\": \"April 30, 2018 at 09:28PM\" }",
   "resource": "/{proxy+}",
   "requestContext": {
     "resourceId": "123456",
