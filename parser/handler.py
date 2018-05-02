@@ -17,8 +17,12 @@ if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
 else:
     LOGGER.setLevel(logging.INFO)
 
-DYNAMO = boto3.resource('dynamodb')
-TABLE = DYNAMO.Table("apthunt")
+# Quick sanity checks and predefined local dev
+if os.getenv("AWS_SAM_LOCAL", ""):
+    DYNAMO = boto3.resource('dynamodb', endpoint_url="http://dynamodb:8000")
+else:
+    DYNAMO = boto3.resource('dynamodb')
+TABLE = DYNAMO.Table(os.getenv("TABLE_NAME", "apthunt"))
 
 
 def respond(err, res=None):
