@@ -30,8 +30,15 @@ test-py: test.py
 
 test: check test-py test-sam
 
-zip: handler.py parser.py out_dir
-	zip $(OUTDIR)/parser.zip handler.py parser.py
+package: out_dir handler.py parser.py
+	mkdir -p $(OUTDIR)/package && \
+	pipenv lock -r > $(OUTDIR)/requirements_tmp.txt && \
+	pipenv run pip install -t $(OUTDIR)/package -r $(OUTDIR)/requirements_tmp.txt &&\
+	cp handler.py parser.py $(OUTDIR)/package
+
+zip: handler.py parser.py out_dir package
+	cd $(OUTDIR)/package/ && \
+	zip -r ../parser.zip *
 
 out_dir:
 	mkdir -p $(OUTDIR)
