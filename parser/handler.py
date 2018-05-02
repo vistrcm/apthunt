@@ -79,7 +79,9 @@ def handler(event, context):
     operation = event['httpMethod']
     if operation in operations:
         payload = event['queryStringParameters'] if operation == 'GET' else body
-        return respond(None, operations[operation](payload))
+        resp = operations[operation](payload)
+        LOGGER.info("operation %s response: '%s'", operation, resp)
+        return respond(None, resp)
 
     return respond(ValueError('Unsupported method "{}"'.format(operation)))
 
