@@ -7,7 +7,7 @@ Resources:
   ApthuntParser:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: parser.handler
+      Handler: handler.handler
       Runtime: python3.6
       Events:
         ListApts:

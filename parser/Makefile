@@ -14,11 +14,11 @@ clean:
 
 cleanall: clean delete-function
 
-pycodestyle: parser.py
-	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle parser.py
+pycodestyle: handler.py parser.py
+	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle handler.py parser.py
 
-pylint: parser.py
-	pipenv run pylint parser.py
+pylint: handler.py parser.py
+	pipenv run pylint handler.py parser.py
 
 check: pycodestyle pylint
 
@@ -30,8 +30,8 @@ test-py: test.py
 
 test: check test-py test-sam
 
-zip: parser.py out_dir
-	zip $(OUTDIR)/parser.zip parser.py
+zip: handler.py parser.py out_dir
+	zip $(OUTDIR)/parser.zip handler.py parser.py
 
 out_dir:
 	mkdir -p $(OUTDIR)
@@ -46,7 +46,7 @@ create-function: $(OUTDIR)/parser.zip
   		--role arn:aws:iam::$(ACCOUNT_ID):role/$(ECECUTION_ROLE) \
   		--runtime python3.6 \
   		--zip-file fileb://$(PWD)/$(OUTDIR)/parser.zip \
-  		--handler parser.handler \
+		--handler handler.handler \
 		--tags project=apthunt,testing=true
 
 update-function-code: $(OUTDIR)/parser.zip
