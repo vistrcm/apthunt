@@ -4,13 +4,17 @@ from datetime import datetime
 import json
 from json.decoder import JSONDecodeError
 import logging
+import os
 import uuid
 
 
 import boto3
 
 LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.DEBUG)
+if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
+    LOGGER.setLevel(logging.DEBUG)
+else:
+    LOGGER.setLevel(logging.INFO)
 
 DYNAMO = boto3.resource('dynamodb')
 TABLE = DYNAMO.Table("apthunt")
