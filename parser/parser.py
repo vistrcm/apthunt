@@ -63,7 +63,7 @@ def handler(event, context):
     except JSONDecodeError as ex:
         msg = "Could not parse body. Ex: '{}'".format(ex)
         LOGGER.warning(msg)
-        respond(ValueError(msg))
+        return respond(ValueError(msg))
 
     LOGGER.debug("body: '%s'", body)
 
