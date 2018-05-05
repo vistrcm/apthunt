@@ -12,6 +12,9 @@ all: clean test zip
 clean:
 	rm -rf $(OUTDIR)
 
+clean-docker-test:
+	docker stop dynamodb ; docker rm dynamodb ; docker network rm lambda-local
+
 cleanall: clean delete-function
 
 pycodestyle: handler.py clparser.py
