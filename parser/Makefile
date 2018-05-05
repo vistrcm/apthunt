@@ -36,7 +36,7 @@ package: out_dir handler.py clparser.py
 	pipenv run pip install -t $(OUTDIR)/package -r $(OUTDIR)/requirements_tmp.txt &&\
 	cp handler.py clparser.py $(OUTDIR)/package
 
-zip: handler.py clparser.py out_dir package
+zip: handler.py clparser.py out_dir package lxml
 	cd $(OUTDIR)/package/ && \
 	zip -r ../parser.zip *
 
@@ -44,6 +44,10 @@ out_dir:
 	mkdir -p $(OUTDIR)
 
 $(OUTDIR)/parser.zip: zip
+
+# workaround to build lxml
+lxml:
+	docker run -t -v ${PWD}/out/package:/out/ -v ${PWD}/buildlxml_entry.sh:/buildlxml_entry.sh --entrypoint /buildlxml_entry.sh -u root lambci/lambda:python3.6
 
 create-function: $(OUTDIR)/parser.zip
 	aws lambda create-function \
