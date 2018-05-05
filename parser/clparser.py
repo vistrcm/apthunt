@@ -44,15 +44,17 @@ def parse_page(page_url):
     result["price"] = price
 
     # housing
-    housing = posting_title_text.find(".housing", first=True).text
-    result["housing"] = housing
+    housing_el = posting_title_text.find(".housing", first=True)
+    if housing_el is not None:
+        result["housing"] = housing_el.text
 
     # titletextonly
     titletextonly = posting_title_text.find("#titletextonly", first=True).text
     result["titletextonly"] = titletextonly
 
     # district ?
-    district = posting_title_text.find("small", first=True).text
-    result["district"] = district
+    district_el = posting_title_text.find("small", first=True)
+    if district_el is not None:
+        result["district"] = district_el.text
 
     return result
