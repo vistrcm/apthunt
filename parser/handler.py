@@ -6,7 +6,7 @@ import logging
 import os
 import uuid
 
-from parser import parse_body
+from parser import parse_body, parse_page
 
 import boto3
 
@@ -95,6 +95,12 @@ def put_item(item):
     # extend a little bit
     item["added"] = int(datetime.utcnow().timestamp() * 1000)
     item["intid"] = uuid.uuid4().hex
+
+    parsed = parse_page(item["PostUrl"])
+
+    # extend item with parsed data
+    for key, value in parsed.items():
+        item["parsed_" + key] = value
 
     return TABLE.put_item(Item=item)
 
