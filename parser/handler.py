@@ -1,15 +1,14 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
-from datetime import datetime
 import json
-from json.decoder import JSONDecodeError
 import logging
 import os
 import uuid
-
-from parser import parse_body, parse_page
+from datetime import datetime
+from json.decoder import JSONDecodeError
 
 import boto3
 
+from parser import parse_body, parse_page
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
