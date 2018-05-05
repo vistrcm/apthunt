@@ -14,11 +14,11 @@ clean:
 
 cleanall: clean delete-function
 
-pycodestyle: handler.py parser.py
-	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle handler.py parser.py
+pycodestyle: handler.py clparser.py
+	pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle handler.py clparser.py
 
-pylint: handler.py parser.py
-	pipenv run pylint handler.py parser.py
+pylint: handler.py clparser.py
+	pipenv run pylint handler.py clparser.py
 
 check: pycodestyle pylint
 
@@ -30,13 +30,13 @@ test-py: test.py
 
 test: check test-py test-sam
 
-package: out_dir handler.py parser.py
+package: out_dir handler.py clparser.py
 	mkdir -p $(OUTDIR)/package && \
 	pipenv lock -r > $(OUTDIR)/requirements_tmp.txt && \
 	pipenv run pip install -t $(OUTDIR)/package -r $(OUTDIR)/requirements_tmp.txt &&\
-	cp handler.py parser.py $(OUTDIR)/package
+	cp handler.py clparser.py $(OUTDIR)/package
 
-zip: handler.py parser.py out_dir package
+zip: handler.py clparser.py out_dir package
 	cd $(OUTDIR)/package/ && \
 	zip -r ../parser.zip *
 

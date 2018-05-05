@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from parser import parse_body
+from clparser import parse_body
 import json
 from json.decoder import JSONDecodeError
 

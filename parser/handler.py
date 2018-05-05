@@ -8,7 +8,7 @@ from json.decoder import JSONDecodeError
 
 import boto3
 
-from parser import parse_body, parse_page
+from clparser import parse_body, parse_page
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
