@@ -1,6 +1,7 @@
 """parser module for parsing data from provided urls"""
 import json
 
+from requests import Response
 from requests_html import HTMLSession
 
 
@@ -23,34 +24,35 @@ def parse_page(page_url):
         "titletextonly": None
     }
     session = HTMLSession()
-    r = session.get(page_url)
+    resp: Response = session.get(page_url)
 
-    result["page_text"] = r.text  # raw page
-    result["page_head"] = r.html.xpath('head/title')[0].text  # html head
+    result["page_text"] = resp.text  # raw page
+    result["page_head"] = resp.html.xpath('head/title')[0].text  # html head
 
     # get post body
-    post_body = r.html.find(".body", first=True)
+    post_body = resp.html.find(".body", first=True)
 
     # posting title
-    postingtitletext = post_body.find(".postingtitle", first=True).find(".postingtitletext", first=True)
-    result["postingtitletext"] = postingtitletext.text
+    posting_title = post_body.find(".postingtitle", first=True)
+    posting_title_text = posting_title.find(".postingtitletext", first=True)
+    result["postingtitletext"] = posting_title_text.text
 
     # price
-    price_text = postingtitletext.find(".price", first=True).text
+    price_text = posting_title_text.find(".price", first=True).text
     price = int(price_text.strip().replace("$", ""))
     result["price_text"] = price_text
     result["price"] = price
 
     # housing
-    housing = postingtitletext.find(".housing", first=True).text
+    housing = posting_title_text.find(".housing", first=True).text
     result["housing"] = housing
 
     # titletextonly
-    titletextonly = postingtitletext.find("#titletextonly", first=True).text
+    titletextonly = posting_title_text.find("#titletextonly", first=True).text
     result["titletextonly"] = titletextonly
 
     # district ?
-    district = postingtitletext.find("small", first=True).text
+    district = posting_title_text.find("small", first=True).text
     result["district"] = district
 
     return result

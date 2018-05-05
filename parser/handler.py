@@ -1,10 +1,11 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
 import json
+from json.decoder import JSONDecodeError
 import logging
 import os
 import uuid
 from datetime import datetime
-from json.decoder import JSONDecodeError
+
 
 import boto3
 
