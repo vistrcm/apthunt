@@ -64,6 +64,11 @@ def handler(event, context):
         'GET': lambda x: TABLE.scan(**x),
         'POST': put_item,
     }
+
+    operation = event['httpMethod']
+    if operation not in operations:
+        return respond(ValueError('Unsupported method "{}"'.format(operation)))
+
     raw_body = event['body']
 
     LOGGER.debug("raw_body: '%s'", raw_body)
@@ -73,17 +78,18 @@ def handler(event, context):
         msg = "Could not parse body. Ex: '{}'".format(ex)
         LOGGER.warning(msg)
         return respond(ValueError(msg))
-
     LOGGER.debug("body: '%s'", body)
 
-    operation = event['httpMethod']
-    if operation in operations:
-        payload = event['queryStringParameters'] if operation == 'GET' else body
+    payload = event['queryStringParameters'] if operation == 'GET' else body
+    try:
         resp = operations[operation](payload)
-        LOGGER.info("operation %s response: '%s'", operation, resp)
-        return respond(None, resp)
+    except Exception as ex:  # pylint: disable=broad-except
+        msg = "got exception doing '{}' on with '{}': {}".format(operations[operation], payload, ex)
+        LOGGER.warning(msg)
+        return respond(ValueError(msg))
 
-    return respond(ValueError('Unsupported method "{}"'.format(operation)))
+    LOGGER.info("operation %s response: '%s'", operation, resp)
+    return respond(None, resp)
 
 
 def put_item(item):
