@@ -10,6 +10,7 @@ requests-html = "*"
 pylint = "*"
 pycodestyle = "*"
 "boto3" = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.6"
