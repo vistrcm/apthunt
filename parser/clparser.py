@@ -21,7 +21,8 @@ def parse_page(page_url):
         "price_text": None,
         "price": None,
         "housing": None,
-        "titletextonly": None
+        "titletextonly": None,
+        "thumbs": None,
     }
     session = HTMLSession()
     resp: Response = session.get(page_url)
@@ -56,5 +57,11 @@ def parse_page(page_url):
     district_el = posting_title_text.find("small", first=True)
     if district_el is not None:
         result["district"] = district_el.text
+
+
+    # userbody
+    userbody = post_body.find(".userbody", first=True)
+    thumbs = userbody.find("#thumbs", first=True).links
+    result["thumbs"] = list(thumbs)
 
     return result
