@@ -10,4 +10,4 @@ WORKDIR /usr/src/searcher
 COPY . .
 RUN pipenv sync
 
-ENTRYPOINT ["pipenv", "run", "python", "searcher.py"]
+ENTRYPOINT ["pipenv", "run", "python", "-u", "searcher.py"]
