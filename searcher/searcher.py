@@ -35,11 +35,20 @@ def send_to_parser(parser_url, link):
     print(resp.json())
 
 
-def safe_send_to_parser(parser_url, link):
-    try:
-        send_to_parser(parser_url, link)
-    except Exception as ex:
-        print("got exception sending link '{}' to parser '{}': '{}'".format(parser_url, link, ex))
+def safe_send_to_parser(parser_url, link, retries=5):
+    """tries to send_to_parser safely.
+
+    try to send request `retries` times. If failing, pass"""
+
+    for _ in range(retries):
+        try:
+            send_to_parser(parser_url, link)
+        except Exception as ex:
+            print("got exception sending link '{}' to parser '{}': '{}'. Retrying.".format(parser_url, link, ex))
+        else:
+            break
+    else:
+        print("got exception sending link '{}' to parser '{}' {} times. Ex: '{}'. ".format(parser_url, link, retries, ex))
 
 
 def repeat(fn, interval):
