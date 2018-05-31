@@ -48,7 +48,7 @@ def safe_send_to_parser(parser_url, link, retries=5):
         else:
             break
     else:
-        print("got exception sending link '{}' to parser '{}' {} times. Ex: '{}'. ".format(parser_url, link, retries, ex))
+        print("failed to send link '{}' to parser '{}' {} times.".format(parser_url, link, retries))
 
 
 def repeat(fn, interval):
