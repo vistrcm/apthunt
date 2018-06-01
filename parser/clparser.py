@@ -15,7 +15,6 @@ def parse_body(raw_body):
 def parse_page(page_url):
     """retrieve and parse html page"""
     result = {
-        "page_text": None,
         "page_head": None,
         "postingtitletext": None,
         "price_text": None,
@@ -26,9 +25,6 @@ def parse_page(page_url):
     }
     session = HTMLSession()
     resp: Response = session.get(page_url)
-
-    result["page_text"] = resp.text  # raw page
-    result["page_head"] = resp.html.xpath('head/title')[0].text  # html head
 
     # get post body
     post_body = resp.html.find(".body", first=True)
