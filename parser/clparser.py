@@ -54,7 +54,6 @@ def parse_page(page_url):
     if district_el is not None:
         result["district"] = district_el.text
 
-
     # userbody
     userbody = post_body.find(".userbody", first=True)
     thumbs = userbody.find("#thumbs", first=True).links
