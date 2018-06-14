@@ -25,7 +25,9 @@ def parse_page(page_url):
         "thumbs": None,
         "data_latitude": None,
         "data_longitude": None,
-        "map_address": None
+        "map_address": None,
+        "map_link": None,
+        "attrs": None
     }
 
     post_body = get_page(page_url)
@@ -70,6 +72,9 @@ def parse_page(page_url):
     if map_address:
         result["map_address"] = map_address.text
 
+    map_link = map_and_attrs.find("p.mapaddress", first=True).find("a", first=True)
+    if map_link:
+        result["map_link"] = map_link.attrs["href"]
 
 
     return result
