@@ -88,7 +88,7 @@ def parse_page(page_url):
     result["postingbody"] = userbody.find("section#postingbody", first=True).text
 
     # notices
-    result["notices"] = [notice.text for notice in userbody.find("ul.notices", first=True).find("li")]
+    result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
     return result
 
 
