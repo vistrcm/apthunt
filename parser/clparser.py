@@ -14,6 +14,7 @@ def parse_request_body(raw_body):
 
 def parse_page(page_url):
     """retrieve and parse html page"""
+    # result format is here to have consistent results with default None
     result = {
         "page_head": None,
         "postingtitletext": None,
@@ -22,6 +23,9 @@ def parse_page(page_url):
         "housing": None,
         "titletextonly": None,
         "thumbs": None,
+        "data_latitude": None,
+        "data_longitude": None,
+        "map_address": None
     }
 
     post_body = get_page(page_url)
@@ -57,6 +61,17 @@ def parse_page(page_url):
     thumbs = userbody.find("#thumbs", first=True).links
     result["thumbs"] = list(thumbs)
 
+    # map
+    map_and_attrs = userbody.find(".mapAndAttrs", first=True)
+    map = map_and_attrs.find("#map", first=True)
+    result["data_latitude"] = float(map.attrs["data-latitude"])
+    result["data_longitude"] = float(map.attrs["data-longitude"])
+    map_address = map_and_attrs.find(".mapaddress", first=True)
+    if map_address:
+        result["map_address"] = map_address.text
+
+
+
     return result
 
 
@@ -70,3 +85,4 @@ def get_page(page_url):
 
 if __name__ == "__main__":
     print(json.dumps(parse_page(sys.argv[1]), indent=4))
+    # print(parse_page(parse_page(sys.argv[1])))
