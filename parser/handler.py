@@ -25,10 +25,10 @@ else:
 TABLE = DYNAMO.Table(os.getenv("TABLE_NAME", "apthunt"))
 
 
-def respond(err, res=None):
+def respond(err, res=None, code=400):
     """helper function to create valid proxy object for AWS lambda + proxy gateway"""
     return {
-        'statusCode': '400' if err else '200',
+        'statusCode': str(code) if err else '200',
         'body': str(err) if err else json.dumps(res),
         'headers': {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ def handler(event, context):
     except Exception as ex:  # pylint: disable=broad-except
         msg = "got exception doing '{}' on with '{}': {}".format(operations[operation], payload, ex)
         LOGGER.warning(msg)
-        return respond(ValueError(msg))
+        return respond(ValueError(msg), code=500)
 
     LOGGER.info("operation %s response: '%s'", operation, resp)
     return respond(None, resp)
