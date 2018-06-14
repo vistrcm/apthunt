@@ -110,6 +110,7 @@ def parse_map(map_and_attrs):
 
 
 def get_page(page_url):
+    """get web page. return html representation"""
     session = HTMLSession()
     resp: HTMLResponse = session.get(page_url)
     # get post body
