@@ -98,6 +98,9 @@ def parse_map(map_and_attrs):
     map_data = {}
 
     posting_map = map_and_attrs.find("#map", first=True)
+    if not posting_map:  # no map found
+        return {}
+
     map_data["data_latitude"] = float(posting_map.attrs["data-latitude"])
     map_data["data_longitude"] = float(posting_map.attrs["data-longitude"])
     map_address = map_and_attrs.find(".mapaddress", first=True)
