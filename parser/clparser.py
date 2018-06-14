@@ -23,6 +23,19 @@ def parse_attr_groups(attrgroups):
     return attrs
 
 
+def parse_price(posting_title_text):
+    """parse price"""
+    price_data = {}
+    price_element = posting_title_text.find(".price", first=True)
+    if price_element:
+        price_text = price_element.text
+        price = int(price_text.strip().replace("$", ""))
+        price_data["price_text"] = price_text
+        price_data["price"] = price
+
+    return price_data
+
+
 def parse_page(page_url):
     """retrieve and parse html page"""
     # result format is here to have consistent results with default None
@@ -51,10 +64,7 @@ def parse_page(page_url):
     result["postingtitletext"] = posting_title_text.text
 
     # price
-    price_text = posting_title_text.find(".price", first=True).text
-    price = int(price_text.strip().replace("$", ""))
-    result["price_text"] = price_text
-    result["price"] = price
+    result.update(parse_price(posting_title_text))
 
     # housing
     housing_el = posting_title_text.find(".housing", first=True)
