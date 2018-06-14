@@ -13,6 +13,9 @@ def parse_request_body(raw_body):
 
 
 def parse_attr_groups(attrgroups):
+    """parse attribute groups
+
+    return list of text values of all spans"""
     attrs = []
     for group in attrgroups:
         for attr in group.find("span"):
@@ -59,8 +62,7 @@ def parse_page(page_url):
         result["housing"] = housing_el.text
 
     # titletextonly
-    titletextonly = posting_title_text.find("#titletextonly", first=True).text
-    result["titletextonly"] = titletextonly
+    result["titletextonly"] = posting_title_text.find("#titletextonly", first=True).text
 
     # district ?
     district_el = posting_title_text.find("small", first=True)
