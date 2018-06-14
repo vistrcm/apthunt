@@ -12,6 +12,14 @@ def parse_request_body(raw_body):
     return body
 
 
+def parse_attr_groups(attrgroups):
+    attrs = []
+    for group in attrgroups:
+        for attr in group.find("span"):
+            attrs.append(attr.text)
+    return attrs
+
+
 def parse_page(page_url):
     """retrieve and parse html page"""
     # result format is here to have consistent results with default None
@@ -76,7 +84,11 @@ def parse_page(page_url):
     if map_link:
         result["map_link"] = map_link.attrs["href"]
 
-
+    # attrgroups
+    attrgroups = map_and_attrs.find("p.attrgroup")
+    attrs = parse_attr_groups(attrgroups)
+    if attrs:
+        result["attrs"] = attrs
     return result
 
 
