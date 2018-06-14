@@ -35,7 +35,9 @@ def parse_page(page_url):
         "data_longitude": None,
         "map_address": None,
         "map_link": None,
-        "attrs": None
+        "attrs": None,
+        "postingbody": None,
+        "notices": None,
     }
 
     post_body = get_page(page_url)
@@ -89,6 +91,12 @@ def parse_page(page_url):
     attrs = parse_attr_groups(attrgroups)
     if attrs:
         result["attrs"] = attrs
+
+    # posting body
+    result["postingbody"] = userbody.find("section#postingbody", first=True).text
+
+    # notices
+    result["notices"] = [notice.text for notice in  userbody.find("ul.notices", first=True).find("li")]
     return result
 
 
