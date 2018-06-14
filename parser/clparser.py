@@ -2,8 +2,7 @@
 import json
 import sys
 
-from requests import Response
-from requests_html import HTMLSession
+from requests_html import HTMLSession, HTMLResponse
 
 
 def parse_request_body(raw_body):
@@ -63,7 +62,7 @@ def parse_page(page_url):
 
 def get_page(page_url):
     session = HTMLSession()
-    resp: Response = session.get(page_url)
+    resp: HTMLResponse = session.get(page_url)
     # get post body
     post_body = resp.html.find(".body", first=True)
     return post_body
