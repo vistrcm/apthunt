@@ -5,7 +5,7 @@ from requests import Response
 from requests_html import HTMLSession
 
 
-def parse_body(raw_body):
+def parse_request_body(raw_body):
     """parse data represented as string to json"""
     body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json'
     body = json.loads(body)

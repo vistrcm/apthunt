@@ -9,7 +9,7 @@ from datetime import datetime
 
 import boto3
 
-from clparser import parse_body, parse_page
+from clparser import parse_request_body, parse_page
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
@@ -73,7 +73,7 @@ def handler(event, context):
 
     LOGGER.debug("raw_body: '%s'", raw_body)
     try:
-        body = parse_body(raw_body)
+        body = parse_request_body(raw_body)
     except JSONDecodeError as ex:
         msg = "Could not parse body. Ex: '{}'".format(ex)
         LOGGER.warning(msg)
