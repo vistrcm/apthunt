@@ -76,16 +76,7 @@ def parse_page(page_url):
 
     # map
     map_and_attrs = userbody.find(".mapAndAttrs", first=True)
-    map = map_and_attrs.find("#map", first=True)
-    result["data_latitude"] = float(map.attrs["data-latitude"])
-    result["data_longitude"] = float(map.attrs["data-longitude"])
-    map_address = map_and_attrs.find(".mapaddress", first=True)
-    if map_address:
-        result["map_address"] = map_address.text
-
-    map_link = map_and_attrs.find("p.mapaddress", first=True).find("a", first=True)
-    if map_link:
-        result["map_link"] = map_link.attrs["href"]
+    result.update(parse_map(map_and_attrs))
 
     # attrgroups
     attrgroups = map_and_attrs.find("p.attrgroup")
@@ -99,6 +90,23 @@ def parse_page(page_url):
     # notices
     result["notices"] = [notice.text for notice in userbody.find("ul.notices", first=True).find("li")]
     return result
+
+
+def parse_map(map_and_attrs):
+    """parse mapAndAttrs. extract map data. return as dict"""
+    map_data = {}
+
+    posting_map = map_and_attrs.find("#map", first=True)
+    map_data["data_latitude"] = float(posting_map.attrs["data-latitude"])
+    map_data["data_longitude"] = float(posting_map.attrs["data-longitude"])
+    map_address = map_and_attrs.find(".mapaddress", first=True)
+    if map_address:
+        map_data["map_address"] = map_address.text
+    map_link = map_and_attrs.find("p.mapaddress", first=True).find("a", first=True)
+    if map_link:
+        map_data["map_link"] = map_link.attrs["href"]
+
+    return map_data
 
 
 def get_page(page_url):
