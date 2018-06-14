@@ -59,7 +59,7 @@ def parse_page(page_url):
     # housing
     housing_el = posting_title_text.find(".housing", first=True)
     if housing_el is not None:
-        result["housing"] = housing_el.text
+        result["housing"] = housing_el.text.strip(" /-")
 
     # titletextonly
     result["titletextonly"] = posting_title_text.find("#titletextonly", first=True).text
