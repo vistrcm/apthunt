@@ -49,7 +49,7 @@ def parse_page(page_url):
     # district ?
     district_el = posting_title_text.find("small", first=True)
     if district_el is not None:
-        result["district"] = district_el.text
+        result["district"] = district_el.text.strip(" ()")
 
 
     # userbody
