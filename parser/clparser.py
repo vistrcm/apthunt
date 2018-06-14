@@ -24,11 +24,8 @@ def parse_page(page_url):
         "titletextonly": None,
         "thumbs": None,
     }
-    session = HTMLSession()
-    resp: Response = session.get(page_url)
 
-    # get post body
-    post_body = resp.html.find(".body", first=True)
+    post_body = get_page(page_url)
 
     # posting title
     posting_title = post_body.find(".postingtitle", first=True)
@@ -62,6 +59,14 @@ def parse_page(page_url):
     result["thumbs"] = list(thumbs)
 
     return result
+
+
+def get_page(page_url):
+    session = HTMLSession()
+    resp: Response = session.get(page_url)
+    # get post body
+    post_body = resp.html.find(".body", first=True)
+    return post_body
 
 
 if __name__ == "__main__":
