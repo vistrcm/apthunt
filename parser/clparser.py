@@ -67,7 +67,6 @@ def parse_page(page_url):
     if district_el is not None:
         result["district"] = district_el.text.strip(" ()")
 
-
     # userbody
     userbody = post_body.find(".userbody", first=True)
     thumbs = userbody.find("#thumbs", first=True).links
@@ -96,7 +95,7 @@ def parse_page(page_url):
     result["postingbody"] = userbody.find("section#postingbody", first=True).text
 
     # notices
-    result["notices"] = [notice.text for notice in  userbody.find("ul.notices", first=True).find("li")]
+    result["notices"] = [notice.text for notice in userbody.find("ul.notices", first=True).find("li")]
     return result
 
 
