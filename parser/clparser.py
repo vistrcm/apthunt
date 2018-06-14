@@ -71,8 +71,9 @@ def parse_page(page_url):
 
     # userbody
     userbody = post_body.find(".userbody", first=True)
-    thumbs = userbody.find("#thumbs", first=True).links
-    result["thumbs"] = list(thumbs)
+    thumbs = userbody.find("#thumbs", first=True)
+    if thumbs:
+        result["thumbs"] = list(thumbs.links)
 
     # map
     map_and_attrs = userbody.find(".mapAndAttrs", first=True)
