@@ -1,5 +1,6 @@
 """parser module for parsing data from provided urls"""
 import json
+import sys
 
 from requests import Response
 from requests_html import HTMLSession
@@ -61,3 +62,7 @@ def parse_page(page_url):
     result["thumbs"] = list(thumbs)
 
     return result
+
+
+if __name__ == "__main__":
+    print(json.dumps(parse_page(sys.argv[1]), indent=4))
