@@ -48,8 +48,11 @@ out_dir:
 
 $(OUTDIR)/parser.zip: zip
 
+lxml-clean:
+	rm -rf $(OUTDIR)/package/lxml*
+
 # workaround to build lxml
-lxml:
+lxml: lxml-clean
 	docker run -t -v ${PWD}/out/package:/out/ -v ${PWD}/buildlxml_entry.sh:/buildlxml_entry.sh --entrypoint /buildlxml_entry.sh -u root lambci/lambda:python3.6
 
 create-function: $(OUTDIR)/parser.zip
