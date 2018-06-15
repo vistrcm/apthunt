@@ -1,9 +1,13 @@
 import unittest
 import random
+from decimal import Decimal
 
 from clparser import parse_request_body
 import json
 from json.decoder import JSONDecodeError
+
+from handler import prepare4dynamo
+
 
 class TestParser(unittest.TestCase):
 
@@ -25,6 +29,15 @@ class TestParser(unittest.TestCase):
             td[k] = v
         data = json.dumps(td)
         self.assertEqual(parse_request_body(data), td)
+
+
+class TestHandler(unittest.TestCase):
+    def test_prepare4dynamo(self):
+        test_data = {"string": "string", "int": 1, "float": random.random() * random.randint(-100, 100)}
+        processed = prepare4dynamo(test_data)
+
+        self.assertIsInstance(processed["float"], Decimal)
+
 
 if __name__ == '__main__':
     unittest.main()
