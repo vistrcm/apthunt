@@ -5,6 +5,11 @@ import sys
 from requests_html import HTMLSession, HTMLResponse
 
 
+class PostRemovedException(Exception):
+    """Exception to handle post removal situations"""
+    pass
+
+
 def parse_request_body(raw_body):
     """parse data represented as string to json"""
     body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json'
@@ -36,6 +41,18 @@ def parse_price(posting_title_text):
     return price_data
 
 
+def post_removed(post_body):
+    """check for post removal.
+
+    search post body for words 'This posting has been flagged for removal.'
+    Return True if found False in over case."""
+    sel = "#userbody > div.removed"
+    div_removed = post_body.find(sel, first=True)
+    if div_removed and div_removed.text.startswith("This posting has been flagged for removal."):
+        return True
+    return False
+
+
 def parse_page(page_url):
     """retrieve and parse html page"""
     # result format is here to have consistent results with default None
@@ -57,6 +74,10 @@ def parse_page(page_url):
     }
 
     post_body = get_page(page_url)
+
+    # chef for removed
+    if post_removed(post_body):
+        raise PostRemovedException(post_body)
 
     # posting title
     posting_title = post_body.find(".postingtitle", first=True)
@@ -134,5 +155,10 @@ def get_page(page_url):
 
 
 if __name__ == "__main__":
-    print(json.dumps(parse_page(sys.argv[1]), indent=4))
+    page = sys.argv[1]
+    try:
+        resp = json.dumps(parse_page(page), indent=4)
+    except PostRemovedException:
+        resp = {"message": "post removed", "item": page}
+    print(resp)
     # print(parse_page(parse_page(sys.argv[1])))

@@ -9,7 +9,7 @@ from json.decoder import JSONDecodeError
 
 import boto3
 
-from clparser import parse_request_body, parse_page
+from clparser import parse_request_body, parse_page, PostRemovedException
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
@@ -114,10 +114,17 @@ def put_item(item):
     `added` equals to current time (unixtime in ms).
     `intid` - generated uuid4 working as primary key."""
     # extend a little bit
+    post_url = item["PostUrl"]
     item["added"] = int(datetime.utcnow().timestamp() * 1000)
     item["intid"] = uuid.uuid4().hex
 
-    parsed = parse_page(item["PostUrl"])
+    # parse_page can throw PostRemovedException
+    # this means post removed. No need to proceed.
+    try:
+        parsed = parse_page(post_url)
+    except PostRemovedException:
+        LOGGER.info("Post removed: %s", post_url)
+        return {"message": "post removed", "item": item}
 
     # extend item with parsed data
     for key, value in parsed.items():
