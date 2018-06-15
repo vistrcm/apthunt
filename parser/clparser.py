@@ -45,10 +45,13 @@ def post_removed(post_body):
     """check for post removal.
 
     search post body for words 'This posting has been flagged for removal.'
+    or 'This posting has been deleted by its author.'
     Return True if found False in over case."""
     sel = "#userbody > div.removed"
     div_removed = post_body.find(sel, first=True)
-    if div_removed and div_removed.text.startswith("This posting has been flagged for removal."):
+    flagged_removal = div_removed.text.startswith("This posting has been flagged for removal.")
+    removed = div_removed.text.startswith("This posting has been deleted by its author.")
+    if div_removed and (flagged_removal or removed):
         return True
     return False
 
@@ -155,10 +158,8 @@ def get_page(page_url):
 
 
 if __name__ == "__main__":
-    page = sys.argv[1]
+    PAGE = sys.argv[1]
     try:
-        resp = json.dumps(parse_page(page), indent=4)
+        print(json.dumps(parse_page(PAGE), indent=4))
     except PostRemovedException:
-        resp = {"message": "post removed", "item": page}
-    print(resp)
-    # print(parse_page(parse_page(sys.argv[1])))
+        print({"message": "post removed", "item": PAGE})
