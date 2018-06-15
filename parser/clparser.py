@@ -96,7 +96,8 @@ def parse_page(page_url):
         result["attrs"] = attrs
 
     # posting body
-    result["postingbody"] = userbody.find("section#postingbody", first=True).text
+    postingbody_raw = userbody.find("section#postingbody", first=True).text
+    result["postingbody"] = postingbody_raw.replace("QR Code Link to This Post\n", "")
 
     # notices
     result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
