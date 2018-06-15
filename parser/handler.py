@@ -1,11 +1,11 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
-import json
-from json.decoder import JSONDecodeError
 import logging
 import os
 import uuid
 from datetime import datetime
-
+from decimal import Decimal
+import json
+from json.decoder import JSONDecodeError
 
 import boto3
 
@@ -92,6 +92,21 @@ def handler(event, context):
     return respond(None, resp)
 
 
+def prepare4dynamo(item):
+    """Need some preparation before sending item to the dynamodb"""
+    processed = {}
+    for key, value in item.items():
+        # convert floats to Decimal
+        # interesting conversion to string and to Decimal required according to the documentation
+        # "To create a Decimal from a float, first convert it to a string."
+        # see https://docs.python.org/3.1/library/decimal.html
+        if isinstance(value, float):
+            processed[key] = Decimal(str(value))
+        else:
+            processed[key] = value
+    return processed
+
+
 def put_item(item):
     """put item into dynamodb table.
 
@@ -108,7 +123,8 @@ def put_item(item):
     for key, value in parsed.items():
         item["parsed_" + key] = value
 
-    return TABLE.put_item(Item=item)
+    processed_item = prepare4dynamo(item)
+    return TABLE.put_item(Item=processed_item)
 
 
 def scan(query):
