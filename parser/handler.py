@@ -9,7 +9,7 @@ from json.decoder import JSONDecodeError
 
 import boto3
 
-from clparser import parse_request_body, parse_page, PostRemovedException
+from clparser import parse_request_body, parse_page, PostRemovedException, CL404Exception
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
@@ -122,7 +122,7 @@ def put_item(item):
     # this means post removed. No need to proceed.
     try:
         parsed = parse_page(post_url)
-    except PostRemovedException:
+    except (PostRemovedException, CL404Exception):
         LOGGER.info("Post removed: %s", post_url)
         return {"message": "post removed", "item": item}
 

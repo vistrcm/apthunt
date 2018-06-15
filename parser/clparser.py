@@ -2,6 +2,7 @@
 import json
 import sys
 
+import requests
 from requests_html import HTMLSession, HTMLResponse
 
 
@@ -9,6 +10,9 @@ class PostRemovedException(Exception):
     """Exception to handle post removal situations"""
     pass
 
+class CL404Exception(Exception):
+    """Exception to handle 404 status codes"""
+    pass
 
 def parse_request_body(raw_body):
     """parse data represented as string to json"""
@@ -49,10 +53,12 @@ def post_removed(post_body):
     Return True if found False in over case."""
     sel = "#userbody > div.removed"
     div_removed = post_body.find(sel, first=True)
-    flagged_removal = div_removed.text.startswith("This posting has been flagged for removal.")
-    removed = div_removed.text.startswith("This posting has been deleted by its author.")
-    if div_removed and (flagged_removal or removed):
-        return True
+    if div_removed:
+        # check for text in div
+        flagged_removal = div_removed.text.startswith("This posting has been flagged for removal.")
+        removed = div_removed.text.startswith("This posting has been deleted by its author.")
+        if flagged_removal or removed:
+            return True
     return False
 
 
@@ -152,6 +158,8 @@ def get_page(page_url):
     """get web page. return html representation"""
     session = HTMLSession()
     resp: HTMLResponse = session.get(page_url)
+    if resp.status_code == 404:
+        raise CL404Exception
     # get post body
     post_body = resp.html.find(".body", first=True)
     return post_body
@@ -161,5 +169,5 @@ if __name__ == "__main__":
     PAGE = sys.argv[1]
     try:
         print(json.dumps(parse_page(PAGE), indent=4))
-    except PostRemovedException:
+    except (PostRemovedException, CL404Exception):
         print({"message": "post removed", "item": PAGE})
