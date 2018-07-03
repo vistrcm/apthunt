@@ -44,15 +44,15 @@ def safe_send_to_parser(parser_url, link, retries=5):
         try:
             send_to_parser(parser_url, link)
         except Exception as ex:
-            print("got exception sending link '{}' to parser '{}': '{}'. Retrying.".format(parser_url, link, ex))
+            print("got exception sending link '{}' to parser '{}': '{}'. Retrying.".format(link, parser_url, ex))
         else:
             break
     else:
-        print("failed to send link '{}' to parser '{}' {} times.".format(parser_url, link, retries))
+        print("failed to send link '{}' to parser '{}' {} times.".format(link, parser_url, retries))
 
 
 def repeat(fn, interval):
-    "repeat `fn` every `interval` seconds"
+    """repeat `fn` every `interval` seconds"""
     brk = False
     while not brk:
         start = time.monotonic()
@@ -83,7 +83,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    repeat(lambda : iteration(args.search_url, args.parser_url), args.interval)
+    repeat(lambda: iteration(args.search_url, args.parser_url), args.interval)
 
 
 if __name__ == "__main__":
