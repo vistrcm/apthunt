@@ -4,13 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+tensorflow = {file = "https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.8.0-py3-none-any.whl"}
 jupyter = "*"
-"boto3" = "*"
-pandas = "*"
-matplotlib = "*"
-seaborn = "*"
 
 [dev-packages]
+jupyter = "*"
 
 [requires]
 python_version = "3.7"
