@@ -2,7 +2,7 @@ FROM python:3
 
 RUN groupadd -r searcher \
     && useradd -m -d /usr/src/searcher --no-log-init -r -g searcher searcher \
-    && pip install pipenv
+    && pip --no-cache-dir install pipenv
 
 USER searcher
 
