@@ -32,7 +32,8 @@ def send_to_parser(parser_url, link):
 
     resp = requests.post(parser_url, json=data)
     resp.raise_for_status()
-    print(resp.json())
+    requestID = resp.json().get("ResponseMetadata", {"RequestId": "NORESP"}).get("RequestId", "NOREQID")
+    print(f"RequestId: {requestID}")
 
 
 def safe_send_to_parser(parser_url, link, retries=5):
