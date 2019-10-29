@@ -74,17 +74,33 @@ def iteration(search_url, parser_url):
         PROCESSED[link] += 1
 
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("search_url", help="url to search links for")
     parser.add_argument("parser_url", help="url to parser service")
+    parser.add_argument("--repeat", type=str2bool, nargs='?', const=True, default=True,
+                        help="repeat search every 'interval' seconds")
     parser.add_argument("--interval", help="interval to parse", type=int, default=60*60)  # search once an hour 
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    repeat(lambda: iteration(args.search_url, args.parser_url), args.interval)
+    if args.repeat:
+        repeat(lambda: iteration(args.search_url, args.parser_url), args.interval)
+    else:
+        iteration(args.search_url, args.parser_url)
 
 
 if __name__ == "__main__":
