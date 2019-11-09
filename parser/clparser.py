@@ -7,12 +7,10 @@ from requests_html import HTMLSession, HTMLResponse
 
 class PostRemovedException(Exception):
     """Exception to handle post removal situations"""
-    pass
 
 
 class CL404Exception(Exception):
     """Exception to handle 404 status codes"""
-    pass
 
 
 def parse_request_body(raw_body):
