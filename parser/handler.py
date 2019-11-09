@@ -89,7 +89,7 @@ def handler(event, context):
         resp = operations[operation](payload)
     except Exception as ex:  # pylint: disable=broad-except
         msg = "got exception doing '{}' on with '{}': {}".format(operations[operation], payload, ex)
-        LOGGER.warning(msg)
+        LOGGER.warning(msg, exc_info=True)
         return respond(ValueError(msg), code=500)
 
     LOGGER.info("operation %s response: '%s'", operation, resp)
