@@ -24,6 +24,10 @@ else:
     DYNAMO = boto3.resource('dynamodb')
 TABLE = DYNAMO.Table(os.getenv("TABLE_NAME", "apthunt"))
 
+# Create SQS client
+SQS = boto3.client('sqs')
+SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL", "")
+
 
 def respond(err, res=None, code=400):
     """helper function to create valid proxy object for AWS lambda + proxy gateway"""
@@ -107,6 +111,17 @@ def prepare4dynamo(item):
     return processed
 
 
+def que_thumbs(item):
+    """send item thumbs to the SQS queue"""
+    # Send message to SQS queue
+    response = SQS.send_message(
+        QueueUrl=SQS_QUEUE_URL,
+        MessageBody=json.dumps(item.get("thumbs"))
+    )
+
+    LOGGER.info("thumbs sql message id: %s", response['MessageId'])
+
+
 def put_item(item):
     """put item into dynamodb table.
 
@@ -122,6 +137,7 @@ def put_item(item):
     # this means post removed. No need to proceed.
     try:
         parsed = parse_page(post_url)
+        que_thumbs(parsed)
     except (PostRemovedException, CL404Exception):
         LOGGER.info("Post removed: %s", post_url)
         return {"message": "post removed", "item": item}
