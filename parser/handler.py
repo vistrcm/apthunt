@@ -114,12 +114,12 @@ def prepare4dynamo(item):
 def que_thumbs(item):
     """send item thumbs to the SQS queue"""
     # Send message to SQS queue
-    response = SQS.send_message(
-        QueueUrl=SQS_QUEUE_URL,
-        MessageBody=json.dumps(item.get("thumbs"))
-    )
-
-    LOGGER.info("thumbs sql message id: %s", response['MessageId'])
+    for thumbs in item.get("thumbs"):
+        response = SQS.send_message(
+            QueueUrl=SQS_QUEUE_URL,
+            MessageBody=thumbs
+        )
+        LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
 
 def put_item(item):
