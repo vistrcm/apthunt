@@ -3,7 +3,7 @@ name: parser tests
 on: [push]
 
 jobs:
-  build:
+  tests:
 
     runs-on: ubuntu-latest
     strategy:
