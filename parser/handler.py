@@ -1,15 +1,19 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
+import json
 import logging
 import os
 import uuid
 from datetime import datetime
 from decimal import Decimal
-import json
 from json.decoder import JSONDecodeError
 
 import boto3
-
+from aws_xray_sdk.core import patch
+from aws_xray_sdk.core import xray_recorder
 from clparser import parse_request_body, parse_page, PostRemovedException, CL404Exception
+
+# x-ray tracing
+patch(['boto3'])
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
@@ -40,6 +44,7 @@ def respond(err, res=None, code=400):
     }
 
 
+@xray_recorder.capture('handler')
 def handler(event, context):
     """request handler
 
@@ -96,6 +101,7 @@ def handler(event, context):
     return respond(None, resp)
 
 
+@xray_recorder.capture('prepare4dynamo')
 def prepare4dynamo(item):
     """Need some preparation before sending item to the dynamodb"""
     processed = {}
@@ -111,6 +117,7 @@ def prepare4dynamo(item):
     return processed
 
 
+@xray_recorder.capture('que_thumbs')
 def que_thumbs(item):
     """send item thumbs to the SQS queue"""
     # Send message to SQS queue
@@ -122,6 +129,7 @@ def que_thumbs(item):
         LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
 
+@xray_recorder.capture('put_item')
 def put_item(item):
     """put item into dynamodb table.
 

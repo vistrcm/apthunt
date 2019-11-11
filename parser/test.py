@@ -1,12 +1,14 @@
-import unittest
-import random
-from decimal import Decimal
-
-from clparser import parse_request_body
 import json
+import random
+import unittest
+from decimal import Decimal
 from json.decoder import JSONDecodeError
 
+from aws_xray_sdk import global_sdk_config
+from clparser import parse_request_body
 from handler import prepare4dynamo
+
+global_sdk_config.set_sdk_enabled(False)
 
 
 class TestParser(unittest.TestCase):

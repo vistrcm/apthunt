@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 requests-html = "*"
+aws-xray-sdk = "*"
 
 [dev-packages]
 pylint = "*"
