@@ -157,6 +157,7 @@ def parse_map(map_and_attrs):
     return map_data
 
 
+@xray_recorder.capture('get_page')
 def get_page(page_url):
     """get web page. return html representation"""
     session = HTMLSession()
