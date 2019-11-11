@@ -2,6 +2,8 @@
 import json
 import sys
 
+from aws_xray_sdk.core import xray_recorder
+
 from requests_html import HTMLSession, HTMLResponse
 
 
@@ -13,6 +15,7 @@ class CL404Exception(Exception):
     """Exception to handle 404 status codes"""
 
 
+@xray_recorder.capture('parse_request_body')
 def parse_request_body(raw_body):
     """parse data represented as string to json"""
     body = raw_body.replace("\n", "\\n")  # repace newlines to be able to parse json'
@@ -61,6 +64,7 @@ def post_removed(post_body):
     return False
 
 
+@xray_recorder.capture('parse_page')
 def parse_page(page_url):
     """retrieve and parse html page"""
     # result format is here to have consistent results with default None
