@@ -10,6 +10,7 @@ from json.decoder import JSONDecodeError
 import boto3
 from aws_xray_sdk.core import patch
 from aws_xray_sdk.core import xray_recorder
+
 from clparser import parse_request_body, parse_page, PostRemovedException, CL404Exception
 
 # x-ray tracing
@@ -118,12 +119,17 @@ def prepare4dynamo(item):
 
 
 @xray_recorder.capture('que_thumbs')
-def que_thumbs(item):
+def que_thumbs(sqs, sqs_queue, item):
     """send item thumbs to the SQS queue"""
     # Send message to SQS queue
-    for thumbs in item.get("thumbs"):
-        response = SQS.send_message(
-            QueueUrl=SQS_QUEUE_URL,
+    thumbs = item.get("thumbs")
+    if thumbs is None:
+        LOGGER.info("no thumbs found")
+        return
+
+    for thumbs in thumbs:
+        response = sqs.send_message(
+            QueueUrl=sqs_queue,
             MessageBody=thumbs
         )
         LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
@@ -145,7 +151,7 @@ def put_item(item):
     # this means post removed. No need to proceed.
     try:
         parsed = parse_page(post_url)
-        que_thumbs(parsed)
+        que_thumbs(SQS, SQS_QUEUE_URL, parsed)
     except (PostRemovedException, CL404Exception):
         LOGGER.info("Post removed: %s", post_url)
         return {"message": "post removed", "item": item}
