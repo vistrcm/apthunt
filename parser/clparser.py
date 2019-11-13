@@ -133,7 +133,9 @@ def parse_page(page_url):
     result["postingbody"] = postingbody_raw.replace("QR Code Link to This Post\n", "")
 
     # notices
-    result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
+    notices = userbody.find("ul.notices", first=True)
+    if notices is not None:
+        result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
     return result
 
 
