@@ -1,3 +1,3 @@
 # Parser function
 
-Parse url provided in input data.
+Parser lambda function.
