@@ -3,10 +3,10 @@ name: parser tests
 on:
   - push:
      paths:
-       - "parser"
+       - "parser/**"
   - pull_request:
       paths:
-        - "parser"
+        - "parser/**"
 
 jobs:
   tests:
