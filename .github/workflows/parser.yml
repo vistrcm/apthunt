@@ -1,6 +1,12 @@
 name: parser tests
 
-on: [push, pull_request]
+on:
+  - push:
+     paths:
+       - "parser"
+  - pull_request:
+      paths:
+        - "parser"
 
 jobs:
   tests:
