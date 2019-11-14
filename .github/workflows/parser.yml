@@ -1,12 +1,12 @@
 name: parser tests
 
 on:
-  - push:
-     paths:
-       - "parser/**"
-  - pull_request:
-      paths:
-        - "parser/**"
+  push:
+    paths:
+      - "parser/**"
+  pull_request:
+    paths:
+      - "parser/**"
 
 jobs:
   tests:
