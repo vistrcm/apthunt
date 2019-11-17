@@ -1,72 +1,66 @@
-package main
+package thumber
 
 import (
-	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
-	"io"
 	"net/http"
-	"os"
-	"time"
 )
 
-//yes, global variables. This is best practice for the AWS Lambda.
-var (
-	uploader *s3manager.Uploader
-	l *lgr.Logger
+type option func(t *Thumber)
+
+//WithHTTPClient sets thumber's http client
+func WithHTTPClient(client *http.Client) option {
+	return func(t *Thumber) {
+		t.httpClient = client
+	}
+}
+
+//WithLogger sets thumber's logger
+func WithLogger(l *lgr.Logger) option {
+	return func(t *Thumber) {
+		t.l = l
+	}
+}
+
+func WithUploader(u *s3manager.Uploader) option {
+	return func(t *Thumber) {
+		t.uploader = u
+	}
+}
+
+//Thumber object can download thumbs from the internet and save in to S3
+type Thumber struct {
+	l          *lgr.Logger
 	httpClient *http.Client
-)
-
-func init(){
-	// allow debug and caller info, timestamp with milliseconds
-	l = lgr.New(lgr.Msec, lgr.Debug, lgr.CallerFile, lgr.CallerFunc)
-
-	//	aws
-	sess := session.Must(session.NewSession())
-
-	// Create an uploader with the session and default options
-	uploader = s3manager.NewUploader(sess)
-
-	httpClient = &http.Client{
-		Timeout: time.Minute * 1,
-	}
+	uploader   *s3manager.Uploader
 }
 
-
-func main(){
-	// initialize logging
-
-
-	//img := "https://images.craigslist.org/00I0I_1gOqlQZz2O7_600x450.jpg"
-	filename := "go.sum"
-	myBucket := "apthunt.thumbs"
-	myString := filename
-
-	f, err  := os.Open(filename)
-	if err != nil {
-		panic(fmt.Errorf("failed to open file %q, %v", filename, err))
+//Process an URL. Download if needed and store the result in to S3
+func (t *Thumber) Process(url string) error {
+	if !t.exists(url) {
+		return nil // no need to download. Already exists
 	}
 
-	location, err := uploadFile(myBucket, myString, f)
-	if err != nil {
-		panic(fmt.Errorf("can't upload: %v", err))
-	}
-	l.Logf("uploaded to %s", location)
+	reader := t.getReader(url)
+	t.upload(reader)
+
+	t.markExists(url)
+	return nil
 }
 
-//uploadFile uploads file from reader to the bucket under key
-//returns result location
-func uploadFile(bucket string, key string, reader io.Reader) (string, error) {
-	// Upload the file to S3.
-	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
-		Body:   reader,
-	})
-	if err != nil {
-		return "", fmt.Errorf("failed to upload file, %v", err)
+//New creates new Thumber
+//No real need for API to be extensible via functional options, but implemented to play with
+func NewThumber(opts ...option) *Thumber {
+	// default thumber
+	t := Thumber{
+		httpClient: http.DefaultClient,
+		l:          lgr.New(lgr.Msec),
 	}
-	return aws.StringValue(&result.Location), nil
+
+	// apply options
+	for _, opt := range opts {
+		opt(&t)
+	}
+
+	return &t
 }
