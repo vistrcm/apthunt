@@ -48,6 +48,26 @@ func (t *Thumber) Process(url string) error {
 	return nil
 }
 
+//exists check for URL existance in records
+func (t *Thumber) exists(url string) bool {
+	panic("NOT IMPLEMENTED")
+}
+
+//getReader returns Reader of http resource
+func (t *Thumber) getReader(s string) interface{} {
+	panic("NOT IMPLEMENTED")
+}
+
+//upload uploads data from reader to the S3
+func (t *Thumber) upload(reader interface{}) {
+	panic("NOT IMPLEMENTED")
+}
+
+//markExists mark url as exists in the DynamoDB table and local cache
+func (t *Thumber) markExists(URL string) {
+	panic("NOT IMPLEMENTED")
+}
+
 //New creates new Thumber
 //No real need for API to be extensible via functional options, but implemented to play with
 func NewThumber(opts ...option) *Thumber {
