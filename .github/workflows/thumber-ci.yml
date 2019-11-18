@@ -5,10 +5,10 @@ on:
     branches:
     tags:
     paths:
-      - "parser/**"
+      - "thumber/**"
   pull_request:
     paths:
-      - "parser/**"
+      - "thumber/**"
 
 jobs:
   build:
