@@ -1,17 +1,19 @@
-package thumber
+package lambda
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
+	"github.com/vistrcm/apthunt/thumber"
 	"net/http"
 	"time"
 )
 
 //global variables. Yes it is bad in general. This is AWS lambda handler and it is a good practice to have globals
 var (
-	thumber *Thumber
-	l       *lgr.Logger
+	t *thumber.Thumber
+	l *lgr.Logger
 )
 
 func init() {
@@ -27,23 +29,23 @@ func init() {
 	uploader := s3manager.NewUploader(sess)
 
 	// initialize thumber
-	thumber = NewThumber(
-		WithLogger(l),
-		WithHTTPClient(httpClient),
-		WithUploader(uploader))
+	t = thumber.NewThumber(
+		thumber.WithLogger(l),
+		thumber.WithHTTPClient(httpClient),
+		thumber.WithUploader(uploader))
 }
 
 func Handler(input string) {
-	records, err := parseInput(input)
-	if err != nil {
+	records := parseInput(input)
 
+	if err := validateURLs(records); err != nil {
+		panic(fmt.Sprintf("URL validation failed: %v", err))
 	}
 
 	for _, r := range records {
-		err := thumber.Process(r)
+		err := t.Process(r)
 		if err != nil {
 			l.Logf("WARN error processing %q: %v", r, err)
 		}
 	}
 }
-
