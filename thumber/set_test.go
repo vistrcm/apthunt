@@ -38,28 +38,28 @@ func Test_set_Contains(t *testing.T) {
 		want   bool
 	}{
 		{
-			name: "hit_data",
+			name:   "hit_data",
 			fields: fields{m: map[string]void{"foo": struct{}{}, "bar": struct{}{}}},
-			args: args{key: "foo"},
-			want: true,
+			args:   args{key: "foo"},
+			want:   true,
 		},
 		{
-			name: "miss_data",
+			name:   "miss_data",
 			fields: fields{m: map[string]void{"foo": struct{}{}, "bar": struct{}{}}},
-			args: args{key: "baar"},
-			want: false,
+			args:   args{key: "baar"},
+			want:   false,
 		},
 		{
-			name: "hit_no_data",
+			name:   "hit_no_data",
 			fields: fields{m: make(map[string]void)},
-			args: args{key: "foo"},
-			want: false,
+			args:   args{key: "foo"},
+			want:   false,
 		},
 		{
-			name: "miss_no_data",
+			name:   "miss_no_data",
 			fields: fields{m: make(map[string]void)},
-			args: args{key: "baar"},
-			want: false,
+			args:   args{key: "baar"},
+			want:   false,
 		},
 	}
 	for _, tt := range tests {
@@ -79,16 +79,28 @@ func Test_set_Add(t *testing.T) {
 		key string
 	}
 	tests := []struct {
-		name   string
+		name string
 		keys []string
 		args args
 		want bool
 	}{
 		{
+			name: "nokeys",
+			keys: []string{},
+			args: args{key: "1"},
+			want: false,
+		},
+		{
 			name: "manykeys",
 			keys: []string{"1", "2", "3"},
 			args: args{key: "1"},
 			want: true,
+		},
+		{
+			name: "manykeysNoContain",
+			keys: []string{"1", "2", "3"},
+			args: args{key: "j"},
+			want: false,
 		},
 	}
 	s := NewSet()
