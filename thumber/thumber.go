@@ -1,9 +1,10 @@
 package thumber
 
 import (
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"fmt"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
 )
@@ -24,10 +25,18 @@ func WithLogger(l *lgr.Logger) Option {
 	}
 }
 
+//WithDynamoTableName sets DynamoDB name to store thumb meta
+func WithDynamoTableName(table string) Option {
+	return func(t *Thumber) {
+		t.tableName = table
+	}
+}
+
 //Thumber object can download thumbs from the internet and save in to S3
 type Thumber struct {
 	uploader   *s3manager.Uploader
 	dynamo     *dynamodb.DynamoDB
+	tableName  string
 	l          *lgr.Logger
 	httpClient *http.Client
 	cache      *Set
@@ -89,8 +98,9 @@ func (t *Thumber) markExists(url string) {
 func NewThumber(uploader *s3manager.Uploader, dynamoClient *dynamodb.DynamoDB, opts ...Option) *Thumber {
 	// default thumber
 	t := Thumber{
-		uploader: uploader,
-		dynamo: dynamoClient,
+		uploader:   uploader,
+		dynamo:     dynamoClient,
+		tableName:  "thumbs",
 		httpClient: http.DefaultClient,
 		l:          lgr.New(lgr.Msec),
 		cache:      NewSet(),
