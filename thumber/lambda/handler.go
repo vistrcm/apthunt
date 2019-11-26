@@ -19,7 +19,7 @@ var (
 )
 
 //init function required for AWS lambda optimization
-func init() { //nolint:gochecknoinits
+func init() {
 	// init Logger, allow debug and caller info, timestamp with milliseconds
 	l = lgr.New(lgr.Msec, lgr.Debug, lgr.CallerFile, lgr.CallerFunc)
 
