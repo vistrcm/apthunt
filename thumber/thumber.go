@@ -49,11 +49,11 @@ func (t *Thumber) Process(url string) error {
 	}
 
 	reader := t.getReader(url)
-	t.upload(reader)
+	s3url := t.upload(reader)
 
-	t.markExists(url)
+	err := t.markExists(url, s3url)
 
-	return nil
+	return err
 }
 
 //exists check for URL existence in records.
@@ -84,7 +84,7 @@ func (t *Thumber) getReader(s string) interface{} {
 }
 
 //upload uploads data from reader to the S3
-func (t *Thumber) upload(reader interface{}) {
+func (t *Thumber) upload(reader interface{}) string {
 	panic("NOT IMPLEMENTED")
 }
 
