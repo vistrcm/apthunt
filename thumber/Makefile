@@ -1,3 +1,8 @@
+.DEFAULT_GOAL := precommit
+
+.PHONY: precommit
+precommit: fmt test lint
+
 .PHONY: fmt
 fmt:
 	go fmt ./... && goimports -w .
