@@ -12,7 +12,7 @@ func TestNewSet(t *testing.T) {
 	}{
 		{
 			name: "create",
-			want: &set{},
+			want: &set{m: make(map[string]void)},
 		},
 	}
 	for _, tt := range tests {
