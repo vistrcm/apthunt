@@ -1,9 +1,10 @@
 package thumber
 
 import (
+	"net/http"
+
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
-	"net/http"
 )
 
 type Option func(t *Thumber)

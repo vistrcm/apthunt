@@ -2,12 +2,13 @@ package lambda
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
 	"github.com/vistrcm/apthunt/thumber"
-	"net/http"
-	"time"
 )
 
 //global variables. Yes it is bad in general. This is AWS lambda handler and it is a good practice to have globals
