@@ -33,7 +33,7 @@ type Thumber struct {
 	l          *lgr.Logger
 	httpClient *http.Client
 	uploader   *s3manager.Uploader
-	cache      set
+	cache      *set
 }
 
 //Process an URL. Download if needed and store the result in to S3
