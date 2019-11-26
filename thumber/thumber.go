@@ -47,6 +47,7 @@ func (t *Thumber) Process(url string) error {
 	t.upload(reader)
 
 	t.markExists(url)
+
 	return nil
 }
 
@@ -60,6 +61,7 @@ func (t *Thumber) exists(url string) bool {
 	if existsInDynamo(url) {
 		return true
 	}
+
 	return false
 }
 

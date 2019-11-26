@@ -10,6 +10,7 @@ func parseInput(input string) []string {
 	// try to load as json array
 	var records []string
 	err := json.Unmarshal([]byte(input), &records)
+
 	if err != nil { // looks like input is not an JSON array
 		// assume it is single URL
 		records = []string{input}
@@ -31,5 +32,6 @@ func validateURLs(records []string) error {
 	if len(errs) > 0 { // errors found
 		return fmt.Errorf("found mailformed urls: %+v", errs)
 	}
+
 	return nil
 }
