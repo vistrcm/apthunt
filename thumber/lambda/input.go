@@ -13,13 +13,14 @@ func parseInput(input string) []string {
 	if err != nil { // looks like input is not an JSON array
 		// assume it is single URL
 		records = []string{input}
-
 	}
+
 	return records
 }
 
 func validateURLs(records []string) error {
 	var errs []error
+
 	for _, record := range records {
 		_, err := url.ParseRequestURI(record)
 		if err != nil {

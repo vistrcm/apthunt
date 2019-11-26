@@ -8,11 +8,11 @@ import (
 func TestNewSet(t *testing.T) {
 	tests := []struct {
 		name string
-		want *set
+		want *Set
 	}{
 		{
 			name: "create",
-			want: &set{m: make(map[string]void)},
+			want: &Set{m: make(map[string]void)},
 		},
 	}
 	for _, tt := range tests {
@@ -64,7 +64,7 @@ func Test_set_Contains(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &set{
+			s := &Set{
 				m: tt.fields.m,
 			}
 			if got := s.Contains(tt.args.key); got != tt.want {

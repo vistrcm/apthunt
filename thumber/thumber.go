@@ -6,23 +6,23 @@ import (
 	"net/http"
 )
 
-type option func(t *Thumber)
+type Option func(t *Thumber)
 
 //WithHTTPClient sets thumber's http client
-func WithHTTPClient(client *http.Client) option {
+func WithHTTPClient(client *http.Client) Option {
 	return func(t *Thumber) {
 		t.httpClient = client
 	}
 }
 
 //WithLogger sets thumber's logger
-func WithLogger(l *lgr.Logger) option {
+func WithLogger(l *lgr.Logger) Option {
 	return func(t *Thumber) {
 		t.l = l
 	}
 }
 
-func WithUploader(u *s3manager.Uploader) option {
+func WithUploader(u *s3manager.Uploader) Option {
 	return func(t *Thumber) {
 		t.uploader = u
 	}
@@ -33,7 +33,7 @@ type Thumber struct {
 	l          *lgr.Logger
 	httpClient *http.Client
 	uploader   *s3manager.Uploader
-	cache      *set
+	cache      *Set
 }
 
 //Process an URL. Download if needed and store the result in to S3
@@ -81,13 +81,13 @@ func (t *Thumber) upload(reader interface{}) {
 }
 
 //markExists mark url as exists in the DynamoDB table and local cache
-func (t *Thumber) markExists(URL string) {
+func (t *Thumber) markExists(url string) {
 	panic("NOT IMPLEMENTED")
 }
 
 //New creates new Thumber
 //No real need for API to be extensible via functional options, but implemented to play with
-func NewThumber(opts ...option) *Thumber {
+func NewThumber(opts ...Option) *Thumber {
 	// default thumber
 	t := Thumber{
 		httpClient: http.DefaultClient,
