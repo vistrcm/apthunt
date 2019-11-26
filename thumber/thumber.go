@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws"
+
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
@@ -44,7 +46,12 @@ type Thumber struct {
 
 //Process an URL. Download if needed and store the result in to S3
 func (t *Thumber) Process(url string) error {
-	if !t.exists(url) {
+	exist, existsErr := t.exists(url)
+	if existsErr != nil {
+		return fmt.Errorf("error checking %q for existence: %v", url, existsErr)
+	}
+
+	if !exist {
 		return nil // no need to download. Already exists
 	}
 
@@ -58,20 +65,36 @@ func (t *Thumber) Process(url string) error {
 
 //exists check for URL existence in records.
 //first check local cache then DynamoDB table.
-func (t *Thumber) exists(url string) bool {
+func (t *Thumber) exists(url string) (bool, error) {
 	if t.existLocally(url) {
-		return true
+		return true, nil
 	}
 
-	if existsInDynamo(url) {
-		return true
+	inDynamo, err := t.existsInDynamo(url)
+	if err != nil {
+		return false, err
 	}
 
-	return false
+	return inDynamo, nil
 }
 
-func existsInDynamo(s string) bool {
-	panic("NOT IMPLEMENTED")
+func (t *Thumber) existsInDynamo(url string) (bool, error) {
+	result, err := t.dynamo.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String(t.tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			"URL": {
+				S: aws.String(url),
+			},
+		},
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	_, ok := result.Item[url]
+
+	return ok, nil
 }
 
 func (t *Thumber) existLocally(s string) bool {
