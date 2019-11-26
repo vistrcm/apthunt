@@ -89,8 +89,18 @@ func (t *Thumber) upload(reader interface{}) string {
 }
 
 //markExists mark url as exists in the DynamoDB table and local cache
-func (t *Thumber) markExists(url string) {
-	panic("NOT IMPLEMENTED")
+func (t *Thumber) markExists(url, s3url string) error {
+	input, err := prepareDBInput(t.tableName, url, s3url)
+	if err != nil {
+		return fmt.Errorf("error preparing item: %v", err)
+	}
+
+	_, err = t.dynamo.PutItem(input)
+	if err != nil {
+		return fmt.Errorf("error calling PutItem on %v: %v", input, err)
+	}
+
+	return nil
 }
 
 //New creates new Thumber
