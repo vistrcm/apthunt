@@ -33,6 +33,7 @@ type Thumber struct {
 	l          *lgr.Logger
 	httpClient *http.Client
 	uploader   *s3manager.Uploader
+	cache      set
 }
 
 //Process an URL. Download if needed and store the result in to S3
@@ -91,6 +92,7 @@ func NewThumber(opts ...option) *Thumber {
 	t := Thumber{
 		httpClient: http.DefaultClient,
 		l:          lgr.New(lgr.Msec),
+		cache:      NewSet(),
 	}
 
 	// apply options
