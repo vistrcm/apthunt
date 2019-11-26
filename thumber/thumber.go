@@ -89,8 +89,8 @@ func (t *Thumber) existsInDynamo(url string) (bool, error) {
 	}
 
 	//specify attribute to get
-	attributeToGet := "URL"
-	input = input.SetAttributesToGet([]*string{&attributeToGet})
+	attributeToGet := aws.String("URL")
+	input = input.SetAttributesToGet([]*string{attributeToGet})
 	result, err := t.dynamo.GetItem(input)
 
 	if err != nil {
