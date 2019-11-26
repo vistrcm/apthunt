@@ -2,6 +2,7 @@ package lambda
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"net/http"
 	"time"
 
@@ -30,12 +31,13 @@ func init() { //nolint:gochecknoinits
 	sess := session.Must(session.NewSession())
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
+	// create dynamoDB client
+	dynamo := dynamodb.New(sess)
 
 	// initialize thumber
-	t = thumber.NewThumber(
+	t = thumber.NewThumber(uploader, dynamo,
 		thumber.WithLogger(l),
-		thumber.WithHTTPClient(httpClient),
-		thumber.WithUploader(uploader))
+		thumber.WithHTTPClient(httpClient))
 }
 
 func Handler(input string) {

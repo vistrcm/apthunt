@@ -1,6 +1,7 @@
 package thumber
 
 import (
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -23,17 +24,12 @@ func WithLogger(l *lgr.Logger) Option {
 	}
 }
 
-func WithUploader(u *s3manager.Uploader) Option {
-	return func(t *Thumber) {
-		t.uploader = u
-	}
-}
-
 //Thumber object can download thumbs from the internet and save in to S3
 type Thumber struct {
+	uploader   *s3manager.Uploader
+	dynamo     *dynamodb.DynamoDB
 	l          *lgr.Logger
 	httpClient *http.Client
-	uploader   *s3manager.Uploader
 	cache      *Set
 }
 
@@ -90,9 +86,11 @@ func (t *Thumber) markExists(url string) {
 
 //New creates new Thumber
 //No real need for API to be extensible via functional options, but implemented to play with
-func NewThumber(opts ...Option) *Thumber {
+func NewThumber(uploader *s3manager.Uploader, dynamoClient *dynamodb.DynamoDB, opts ...Option) *Thumber {
 	// default thumber
 	t := Thumber{
+		uploader: uploader,
+		dynamo: dynamoClient,
 		httpClient: http.DefaultClient,
 		l:          lgr.New(lgr.Msec),
 		cache:      NewSet(),
