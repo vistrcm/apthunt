@@ -1,6 +1,6 @@
 .PHONY: fmt
 fmt:
-	go fmt ./...
+	go fmt ./... && goimports -w .
 
 .PHONY: test
 test:
