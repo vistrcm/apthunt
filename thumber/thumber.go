@@ -79,14 +79,19 @@ func (t *Thumber) exists(url string) (bool, error) {
 }
 
 func (t *Thumber) existsInDynamo(url string) (bool, error) {
-	result, err := t.dynamo.GetItem(&dynamodb.GetItemInput{
+	input := &dynamodb.GetItemInput{
 		TableName: aws.String(t.tableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"URL": {
 				S: aws.String(url),
 			},
 		},
-	})
+	}
+
+	//specify attribute to get
+	attributeToGet := "URL"
+	input = input.SetAttributesToGet([]*string{&attributeToGet})
+	result, err := t.dynamo.GetItem(input)
 
 	if err != nil {
 		return false, err
