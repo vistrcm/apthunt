@@ -23,6 +23,7 @@ func prepareDBInput(table, url, s3url string) (*dynamodb.PutItemInput, error) {
 		UploadTime: now,
 	}
 	av, err := dynamodbattribute.MarshalMap(item)
+
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling item %v to dynamo: %v", item, err)
 	}
@@ -33,5 +34,4 @@ func prepareDBInput(table, url, s3url string) (*dynamodb.PutItemInput, error) {
 	}
 
 	return input, err
-
 }
