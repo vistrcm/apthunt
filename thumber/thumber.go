@@ -54,7 +54,7 @@ func (t *Thumber) Process(url string) error {
 //exists check for URL existence in records.
 //first check local cache then DynamoDB table.
 func (t *Thumber) exists(url string) bool {
-	if existLocally(url) {
+	if t.existLocally(url) {
 		return true
 	}
 
@@ -69,8 +69,8 @@ func existsInDynamo(s string) bool {
 	panic("NOT IMPLEMENTED")
 }
 
-func existLocally(s string) bool {
-	panic("NOT IMPLEMENTED")
+func (t *Thumber) existLocally(s string) bool {
+	return t.cache.Contains(s)
 }
 
 //getReader returns Reader of http resource
