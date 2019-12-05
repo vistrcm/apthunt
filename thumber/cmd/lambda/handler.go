@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/aws/aws-xray-sdk-go/xray"
+
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-pkgz/lgr"
@@ -22,6 +26,12 @@ var (
 
 //init function required for AWS lambda optimization
 func init() { //nolint:gochecknoinits
+	//config xray
+	err := xray.Configure(xray.Config{LogLevel: "trace"})
+	if err != nil {
+		panic(fmt.Sprintf("cant' configure xray: %v", err))
+	}
+
 	// init Logger, allow debug and caller info, timestamp with milliseconds
 	l = lgr.New(lgr.Msec, lgr.Debug, lgr.CallerFile, lgr.CallerFunc)
 
@@ -34,6 +44,7 @@ func init() { //nolint:gochecknoinits
 	uploader := s3manager.NewUploader(sess)
 	// create dynamoDB client
 	dynamo := dynamodb.New(sess)
+	xray.AWS(dynamo.Client)
 
 	// initialize thumber
 	t = thumber.NewThumber(uploader, dynamo,
@@ -41,7 +52,7 @@ func init() { //nolint:gochecknoinits
 		thumber.WithHTTPClient(httpClient))
 }
 
-func Handler(input string) {
+func Handler(ctx context.Context, input string) {
 	records := parseInput(input)
 
 	if err := validateURLs(records); err != nil {
@@ -54,4 +65,8 @@ func Handler(input string) {
 			l.Logf("WARN error processing %q: %v", r, err)
 		}
 	}
+}
+
+func main() {
+	lambda.Start(Handler)
 }
