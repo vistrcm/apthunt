@@ -67,13 +67,13 @@ func Handler(ctx context.Context, sqsEvent events.SQSEvent) {
 		records := parseInput(input)
 
 		if err := validateURLs(records); err != nil {
-			panic(fmt.Sprintf("URL validation failed: %v", err))
+			panic(fmt.Errorf("URL validation failed: %v", err))
 		}
 
 		for _, r := range records {
 			err := t.Process(ctx, r)
 			if err != nil {
-				l.Logf("WARN error processing %q: %v", r, err)
+				panic(fmt.Errorf("error processing %q: %v", r, err))
 			}
 		}
 	}
