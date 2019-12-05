@@ -14,3 +14,9 @@ test:
 .PHONY: lint
 lint:
 	golangci-lint run --enable-all --tests=false
+
+.PHONY: build_handler
+build_handler: hanlder
+
+handler: cmd/lambda/handler.go cmd/lambda/input.go
+	GOOS=linux go build cmd/lambda/handler.go cmd/lambda/input.go
