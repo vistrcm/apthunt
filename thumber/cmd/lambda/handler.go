@@ -1,4 +1,4 @@
-package lambda
+package main
 
 import (
 	"fmt"
