@@ -55,7 +55,7 @@ func init() { //nolint:gochecknoinits
 }
 
 func Handler(ctx context.Context, sqsEvent events.SQSEvent) {
-	// Start a subsegment
+	// Start a segment
 	ctx, seg := xray.BeginSegment(ctx, "Handler")
 	defer seg.Close(nil)
 
