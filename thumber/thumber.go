@@ -2,7 +2,10 @@ package thumber
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 
@@ -37,6 +40,7 @@ func WithDynamoTableName(table string) Option {
 //Thumber object can download thumbs from the internet and save in to S3
 type Thumber struct {
 	uploader   *s3manager.Uploader
+	bucket     string
 	dynamo     *dynamodb.DynamoDB
 	tableName  string
 	l          *lgr.Logger
