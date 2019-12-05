@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -32,7 +34,8 @@ func main() {
 	t := thumber.NewThumber(uploader, dynamo,
 		thumber.WithLogger(l),
 		thumber.WithHTTPClient(httpClient))
-
-	err := t.Process("https://images.craigslist.org/00d0d_fG6ynpO9XAM_600x450.jpg")
+	img := os.Args[1]
+	fmt.Printf("IMG: %q\n", img)
+	err := t.Process(context.Background(), img)
 	fmt.Printf("err: %v\n", err)
 }
