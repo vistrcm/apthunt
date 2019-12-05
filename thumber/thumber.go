@@ -1,6 +1,7 @@
 package thumber
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -49,8 +50,8 @@ type Thumber struct {
 }
 
 //Process an URL. Download if needed and store the result in to S3
-func (t *Thumber) Process(url string) error {
-	exist, existsErr := t.exists(url)
+func (t *Thumber) Process(ctx context.Context, url string) error {
+	exist, existsErr := t.exists(ctx, url)
 	if existsErr != nil {
 		return fmt.Errorf("error checking %q for existence: %v", url, existsErr)
 	}
@@ -78,7 +79,7 @@ func (t *Thumber) Process(url string) error {
 		return fmt.Errorf("can't upload %q", url)
 	}
 
-	err = t.markExists(url, s3url)
+	err = t.markExists(ctx, url, s3url)
 
 	return err
 }
@@ -94,12 +95,12 @@ func getKeyForURL(u string) (string, error) {
 
 //exists check for URL existence in records.
 //first check local cache then DynamoDB table.
-func (t *Thumber) exists(url string) (bool, error) {
+func (t *Thumber) exists(ctx context.Context, url string) (bool, error) {
 	if t.existLocally(url) {
 		return true, nil
 	}
 
-	inDynamo, err := t.existsInDynamo(url)
+	inDynamo, err := t.existsInDynamo(ctx, url)
 	if err != nil {
 		return false, err
 	}
@@ -107,7 +108,7 @@ func (t *Thumber) exists(url string) (bool, error) {
 	return inDynamo, nil
 }
 
-func (t *Thumber) existsInDynamo(url string) (bool, error) {
+func (t *Thumber) existsInDynamo(ctx context.Context, url string) (bool, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(t.tableName),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -120,7 +121,7 @@ func (t *Thumber) existsInDynamo(url string) (bool, error) {
 	//specify attribute to get
 	attributeToGet := aws.String("URL")
 	input = input.SetAttributesToGet([]*string{attributeToGet})
-	result, err := t.dynamo.GetItem(input)
+	result, err := t.dynamo.GetItemWithContext(ctx, input)
 
 	if err != nil {
 		return false, err
@@ -183,13 +184,13 @@ func (t *Thumber) upload(key string, reader io.ReadCloser) (string, error) {
 }
 
 //markExists mark url as exists in the DynamoDB table and local cache
-func (t *Thumber) markExists(url, s3url string) error {
+func (t *Thumber) markExists(ctx context.Context, url, s3url string) error {
 	input, err := prepareDBInput(t.tableName, url, s3url)
 	if err != nil {
 		return fmt.Errorf("error preparing item: %v", err)
 	}
 
-	_, err = t.dynamo.PutItem(input)
+	_, err = t.dynamo.PutItemWithContext(ctx, input)
 	if err != nil {
 		return fmt.Errorf("error calling PutItem on %v: %v", input, err)
 	}
