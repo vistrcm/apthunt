@@ -126,9 +126,20 @@ func (t *Thumber) existsInDynamo(url string) (bool, error) {
 		return false, err
 	}
 
-	_, ok := result.Item[url]
+	retrieved, ok := result.Item["URL"]
 
-	return ok, nil
+	if !ok { // not found in dynamo
+		return false, nil
+	}
+
+	//small additional check
+	if url != *retrieved.S {
+		return false, fmt.Errorf("something weird happened: can find item in dynamo, but key is different.: "+
+			"%q != %q", url, retrieved)
+	}
+
+	// all looks ok
+	return true, nil
 }
 
 func (t *Thumber) existLocally(s string) bool {
