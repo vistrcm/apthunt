@@ -200,12 +200,17 @@ func (t *Thumber) markExists(url, s3url string) error {
 //New creates new Thumber
 //No real need for API to be extensible via functional options, but implemented to play with
 func NewThumber(uploader *s3manager.Uploader, dynamoClient *dynamodb.DynamoDB, opts ...Option) *Thumber {
+	//build http client with defined timeout
+	var httpClient = &http.Client{
+		Timeout: 30 * time.Second,
+	}
 	// default thumber
 	t := Thumber{
 		uploader:   uploader,
+		bucket:     "apthunt.thumbs",
 		dynamo:     dynamoClient,
 		tableName:  "thumbs",
-		httpClient: http.DefaultClient,
+		httpClient: httpClient,
 		l:          lgr.New(lgr.Msec),
 		cache:      NewSet(),
 	}
