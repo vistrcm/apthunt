@@ -1,0 +1,38 @@
+name: thumber tests
+
+on:
+  push:
+    branches:
+    tags:
+    paths:
+      - "thumber/**"
+  pull_request:
+    paths:
+      - "thumber/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: build and test
+        run: |
+          cd thumber
+          go test -timeout=60s -covermode=count ./...
+
+      - name: install golangci-lint
+        run: |
+          curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.21.0
+
+      - name: run linters
+        run: |
+          cd thumber
+          $GITHUB_WORKSPACE/golangci-lint run --enable-all --tests=false --out-format=tab
