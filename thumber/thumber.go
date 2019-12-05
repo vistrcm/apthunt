@@ -51,7 +51,8 @@ func (t *Thumber) Process(url string) error {
 		return fmt.Errorf("error checking %q for existence: %v", url, existsErr)
 	}
 
-	if !exist {
+	if exist {
+		t.l.Logf("entity %q already downloaded", url)
 		return nil // no need to download. Already exists
 	}
 
