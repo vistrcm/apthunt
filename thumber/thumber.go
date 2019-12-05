@@ -64,6 +64,15 @@ func (t *Thumber) Process(url string) error {
 	return err
 }
 
+func getKeyForURL(u string) (string, error) {
+	parsed, err := url.ParseRequestURI(u)
+	if err != nil {
+		return "", err
+	}
+
+	return parsed.Path, nil
+}
+
 //exists check for URL existence in records.
 //first check local cache then DynamoDB table.
 func (t *Thumber) exists(url string) (bool, error) {
