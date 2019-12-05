@@ -56,10 +56,25 @@ func (t *Thumber) Process(url string) error {
 		return nil // no need to download. Already exists
 	}
 
-	reader := t.getReader(url)
-	s3url := t.upload(reader)
+	reader, err := t.getReader(url)
+	if err != nil {
+		t.l.Logf("WARN error getting reader for %q: %v", url, err)
+		return fmt.Errorf("error getting reader for %q", url)
+	}
 
-	err := t.markExists(url, s3url)
+	key, err := getKeyForURL(url)
+	if err != nil {
+		t.l.Logf("WARN can not get key for the url %q: %v", url, err)
+		return fmt.Errorf("can not get key for the url %q: %v", url, err)
+	}
+
+	s3url, err := t.upload(key, reader)
+	if err != nil {
+		t.l.Logf("WARN can't upload %q to s3: %v", url, err)
+		return fmt.Errorf("can't upload %q", url)
+	}
+
+	err = t.markExists(url, s3url)
 
 	return err
 }
