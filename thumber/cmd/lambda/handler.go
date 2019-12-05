@@ -29,7 +29,7 @@ var (
 //init function required for AWS lambda optimization
 func init() { //nolint:gochecknoinits
 	//config xray
-	err := xray.Configure(xray.Config{LogLevel: "trace"})
+	err := xray.Configure(xray.Config{LogLevel: "info"})
 	if err != nil {
 		panic(fmt.Sprintf("cant' configure xray: %v", err))
 	}
