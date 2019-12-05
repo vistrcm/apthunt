@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aws/aws-lambda-go/events"
+
 	"github.com/aws/aws-xray-sdk-go/xray"
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -52,17 +54,27 @@ func init() { //nolint:gochecknoinits
 		thumber.WithHTTPClient(httpClient))
 }
 
-func Handler(ctx context.Context, input string) {
-	records := parseInput(input)
+func Handler(ctx context.Context, sqsEvent events.SQSEvent) {
+	// Start a subsegment
+	ctx, seg := xray.BeginSegment(ctx, "Handler")
+	defer seg.Close(nil)
 
-	if err := validateURLs(records); err != nil {
-		panic(fmt.Sprintf("URL validation failed: %v", err))
-	}
+	for _, message := range sqsEvent.Records {
+		fmt.Printf("The message %s for event source %s = %s\n",
+			message.MessageId, message.EventSource, message.Body)
 
-	for _, r := range records {
-		err := t.Process(r)
-		if err != nil {
-			l.Logf("WARN error processing %q: %v", r, err)
+		input := message.Body
+		records := parseInput(input)
+
+		if err := validateURLs(records); err != nil {
+			panic(fmt.Sprintf("URL validation failed: %v", err))
+		}
+
+		for _, r := range records {
+			err := t.Process(ctx, r)
+			if err != nil {
+				l.Logf("WARN error processing %q: %v", r, err)
+			}
 		}
 	}
 }
