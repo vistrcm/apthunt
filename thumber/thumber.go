@@ -117,13 +117,39 @@ func (t *Thumber) existLocally(s string) bool {
 }
 
 //getReader returns Reader of http resource
-func (t *Thumber) getReader(s string) interface{} {
-	panic("NOT IMPLEMENTED")
+func (t *Thumber) getReader(url string) (io.ReadCloser, error) {
+	// response body will be closed later on stack. See upload().
+	resp, err := t.httpClient.Get(url) //nolint:bodyclose
+
+	if err != nil {
+		t.l.Logf("WARN error getting %q", url)
+		return nil, fmt.Errorf("error getting %q", url)
+	}
+
+	return resp.Body, nil
 }
 
 //upload uploads data from reader to the S3
-func (t *Thumber) upload(reader interface{}) string {
-	panic("NOT IMPLEMENTED")
+func (t *Thumber) upload(key string, reader io.ReadCloser) (string, error) {
+	//need to close reader at the end
+	defer func() {
+		if err := reader.Close(); err != nil {
+			panic(fmt.Sprintf("can't close reader: %v", err))
+		}
+	}()
+
+	out, err := t.uploader.Upload(&s3manager.UploadInput{
+		Bucket: &t.bucket,
+		Key:    &key,
+		Body:   reader,
+	})
+
+	if err != nil {
+		t.l.Logf("WARN Unable to upload %q to %q, %v", key, t.bucket, err)
+		return "", fmt.Errorf("unable to upload to s3: %v", err)
+	}
+
+	return out.Location, nil
 }
 
 //markExists mark url as exists in the DynamoDB table and local cache
