@@ -127,12 +127,11 @@ def que_thumbs(sqs, sqs_queue, item):
         LOGGER.info("no thumbs found")
         return
 
-    for thumbs in thumbs:
-        response = sqs.send_message(
-            QueueUrl=sqs_queue,
-            MessageBody=thumbs
-        )
-        LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
+    response = sqs.send_message(
+        QueueUrl=sqs_queue,
+        MessageBody=thumbs
+    )
+    LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
 
 @xray_recorder.capture('put_item')
