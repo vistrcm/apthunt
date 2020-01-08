@@ -127,9 +127,10 @@ def que_thumbs(sqs, sqs_queue, item):
         LOGGER.info("no thumbs found")
         return
 
+    msg = json.dumps(thumbs)
     response = sqs.send_message(
         QueueUrl=sqs_queue,
-        MessageBody=thumbs
+        MessageBody=msg
     )
     LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
