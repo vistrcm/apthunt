@@ -6,11 +6,11 @@ name = "pypi"
 [packages]
 requests-html = "*"
 aws-xray-sdk = "*"
+"boto3" = "*"
 
 [dev-packages]
 pylint = "*"
 pycodestyle = "*"
-"boto3" = "*"
 ipython = "*"
 flake8 = "*"
 moto = "*"
