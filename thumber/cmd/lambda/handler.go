@@ -56,16 +56,7 @@ func init() { //nolint:gochecknoinits
 }
 
 func Handler(ctx context.Context, sqsEvent events.SQSEvent) error {
-	err := xray.Configure(xray.Config{
-		LogLevel:       "info", // default
-		ServiceVersion: "1.2.3",
-	})
-
-	if err != nil {
-		return fmt.Errorf("error configuring xray: %v", err)
-	}
-
-	// Start a segment
+	// Start a subsegment
 	ctx, seg := xray.BeginSubsegment(ctx, "Thumber")
 	defer seg.Close(nil)
 
