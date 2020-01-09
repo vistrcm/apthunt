@@ -72,7 +72,7 @@ class TestHandler(unittest.TestCase):
             ],
         }
 
-        expected = ['INFO:root:thumb SQS response message id:'] * 3  # 3 elements with similar start
+        expected = ['INFO:root:thumb SQS response message id:'] # 3 elements with similar start
         # only logs here
         with self.assertLogs() as cm:
             que_thumbs(sqs_client, queue_url, test_data)
@@ -83,7 +83,9 @@ class TestHandler(unittest.TestCase):
         messages = sqs_client.receive_message(QueueUrl=queue_url, MaxNumberOfMessages=4)[
             "Messages"
         ]
-        received = [m["Body"] for m in messages]
+        received = []
+        for m in messages:
+            received.extend(json.loads(m["Body"]))
 
         self.assertEqual(set(received), set(test_data["thumbs"]))
 
