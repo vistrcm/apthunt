@@ -55,8 +55,13 @@ func init() { //nolint:gochecknoinits
 }
 
 func Handler(ctx context.Context, sqsEvent events.SQSEvent) {
+	xray.Configure(xray.Config{
+		LogLevel:       "info", // default
+		ServiceVersion: "1.2.3",
+	})
+
 	// Start a segment
-	ctx, seg := xray.BeginSegment(ctx, "Handler")
+	ctx, seg := xray.BeginSubsegment(ctx, "Thumber")
 	defer seg.Close(nil)
 
 	for _, message := range sqsEvent.Records {
