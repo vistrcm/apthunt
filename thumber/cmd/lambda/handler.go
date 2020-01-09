@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -69,7 +70,7 @@ func Handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	defer seg.Close(nil)
 
 	for _, message := range sqsEvent.Records {
-		fmt.Printf("The message %s for event source %s = %s\n",
+		log.Printf("The message %s for event source %s = %s\n",
 			message.MessageId, message.EventSource, message.Body)
 
 		input := message.Body
