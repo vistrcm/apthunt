@@ -8,6 +8,8 @@ jupyter = "*"
 pandas = "*"
 boto3 = "*"
 seaborn = "*"
+appnope = "*"
+fastai2 = "*"
 
 [dev-packages]
 jupyter = "*"
