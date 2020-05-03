@@ -1,0 +1,67 @@
+POST http://localhost:8080/predictor/
+Content-Type: application/json
+
+[
+  {
+    "latitude": 37.3538,
+    "longitude": -122.026,
+    "district": "sunnyvale",
+    "housing": "2br - 1300ft2",
+    "bedrooms": 2,
+    "area": 1300,
+    "type": "townhouse",
+    "catsok": false,
+    "dogsok": false,
+    "garagea": false,
+    "garaged": true,
+    "laundryb": false,
+    "furnished": false,
+    "laundrys": false,
+    "wd": true,
+    "nthumbs": 18
+  }
+]
+
+###
+
+POST http://localhost:8080/predictor/
+Content-Type: application/json
+
+[
+  {
+    "latitude": 37.3538,
+    "longitude": -122.026,
+    "district": "sunnyvale",
+    "housing": "2br - 1300ft2",
+    "bedrooms": 2,
+    "area": 1300,
+    "type": "townhouse",
+    "catsok": false,
+    "dogsok": false,
+    "garagea": false,
+    "garaged": true,
+    "laundryb": false,
+    "furnished": false,
+    "laundrys": false,
+    "wd": true,
+    "nthumbs": 18
+  },
+  {
+    "latitude": 37.3538,
+    "longitude": -122.026,
+    "district": "sunnyvale",
+    "housing": "2br - 1300ft2",
+    "bedrooms": 2,
+    "area": 1300,
+    "type": "townhouse",
+    "catsok": false,
+    "dogsok": false,
+    "garagea": false,
+    "garaged": true,
+    "laundryb": false,
+    "furnished": false,
+    "laundrys": false,
+    "wd": true,
+    "nthumbs": 18
+  }
+]
