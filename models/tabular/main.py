@@ -3,10 +3,9 @@ from typing import Dict
 
 from flask import Flask, request, jsonify
 
-from model import get_learner
-from model import min_abs_diff, mean_abs_diff, max_abs_diff  # need this import inderectly by the model
-
 import pandas as pd
+
+from model import get_learner
 
 app = Flask(__name__)
 learner = get_learner()

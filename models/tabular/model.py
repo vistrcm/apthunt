@@ -5,16 +5,6 @@ import requests
 from fastai2.learner import load_learner
 
 
-# some shared methods required for the model
-def mean_abs_diff(inp, target): return (inp - target).abs().mean()
-
-
-def min_abs_diff(inp, target): return (inp - target).abs().min()
-
-
-def max_abs_diff(inp, target): return (inp - target).abs().max()
-
-
 def maybe_download_model(url):
     f_name = url.split('/')[-1]
     local_path = Path("/tmp/model_{}".format(f_name))
@@ -32,7 +22,7 @@ def maybe_download_model(url):
     return local_path
 
 
-def get_learner(model_url="https://storage.googleapis.com/sv-fastai/models/apthunt/20200502_cltab.pkl"):
+def get_learner(model_url="https://storage.googleapis.com/sv-fastai/models/apthunt/20200503_cltab.pkl"):
     print(f"downloading model from {model_url}")
     path = maybe_download_model(model_url)
     learn = load_learner(path)
