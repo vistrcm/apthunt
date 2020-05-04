@@ -10,6 +10,7 @@ aws-xray-sdk = "*"
 flask = "*"
 jupyter = "*"
 pandas = "*"
+fastai2 = "*"
 
 [dev-packages]
 pylint = "*"
