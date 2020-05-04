@@ -3,5 +3,3 @@
 .idea/
 apthunt.iml
 
-# ignored files in analysis/
-analysis/df.pkl

@@ -3,3 +3,5 @@ apthunt.pkl
 train.csv
 trained_model/
 train.pd
+apthuntdata/
+df.pkl
