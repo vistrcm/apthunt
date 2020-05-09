@@ -19,7 +19,13 @@ variable "dynamo_table_arn" {
   default     = "ARNGOESHERE"
   description = "arn of dynamo table used by parser"
 }
+
 variable "sqs_thumbs_arn" {
   default     = "ARNGOESHERE"
   description = "arn of SQS used by thumbs"
+}
+
+variable "sqs_thumbs_url" {
+  default     = "URLGOESHERE"
+  description = "URL of SQS used by thumbs"
 }
