@@ -14,12 +14,12 @@ provider "aws" {
 
 module "processor" {
   source = "./processor"
-  tags = local.processor_tags
+  tags   = local.processor_tags
 }
 
 module "parser" {
   source = "./parser"
-  tags = local.parser_tags
+  tags   = local.parser_tags
 }
 
 locals {
@@ -31,13 +31,13 @@ locals {
   }
   # add Name for readability and merge with common tags
   processor_tags = merge(local.common_tags,
-  {
-    "Name" = "processor",
-    "function" = "processor"
+    {
+      "Name"     = "processor",
+      "function" = "processor"
   })
   parser_tags = merge(local.common_tags,
-  {
-    "Name" = "apthuntparser",
-    "function" = "apthuntparser"
+    {
+      "Name"     = "apthuntparser",
+      "function" = "apthuntparser"
   })
 }
