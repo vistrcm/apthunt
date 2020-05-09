@@ -1,17 +1,3 @@
-variable "lambda_name" {
-  default     = "processor"
-  description = "processor function name"
-}
-
-locals {
-  # add Name for readability and merge with common tags
-  processor_tags = merge(local.common_tags,
-  {
-    "Name" = var.lambda_name,
-    "function" = "processor"
-  })
-}
-
 // create archive with function sources
 data "archive_file" "lambda_zip" {
   type        = "zip"
@@ -30,14 +16,14 @@ resource "aws_lambda_function" "processor" {
   publish          = true
   source_code_hash = filesha256(data.archive_file.lambda_zip.source_file)
 
-  tags = local.processor_tags
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "processor_logs" {
   name              = "/aws/lambda/${var.lambda_name}"
   retention_in_days = 14
 
-  tags = local.processor_tags
+  tags = var.tags
 }
 
 // polocy for lambda
@@ -56,7 +42,7 @@ data "aws_iam_policy_document" "lambda_exec" {
 }
 
 # define logging policy
-data "aws_iam_policy_document" "lambda_loggin" {
+data "aws_iam_policy_document" "lambda_logging" {
   // write CloudWatch logs
   statement {
     actions = [
@@ -71,7 +57,7 @@ data "aws_iam_policy_document" "lambda_loggin" {
 # create logging policy
 resource "aws_iam_policy" "lambda_logging" {
   description = "role for processor logging"
-  policy      = data.aws_iam_policy_document.lambda_loggin.json
+  policy      = data.aws_iam_policy_document.lambda_logging.json
 }
 
 # attach loggin policy to the role
@@ -85,5 +71,5 @@ resource "aws_iam_role" "processor-lambda" {
   name               = "processor-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_exec.json
 
-  tags = local.processor_tags
+  tags = var.tags
 }
