@@ -1,11 +1,11 @@
 variable "lambda_name" {
-  default = "apthuntparser"
+  default     = "apthuntparser"
   description = "parser function name"
 }
 
 variable "tags" {
   default = {
-    Name = "parser",
+    Name     = "parser",
     function = "parser"
   }
   description = "parser tags"
@@ -16,10 +16,10 @@ variable "archive" {
 }
 
 variable "dynamo_table_arn" {
-  default = "ARNGOESHERE"
+  default     = "ARNGOESHERE"
   description = "arn of dynamo table used by parser"
 }
 variable "sqs_thumbs_arn" {
-  default = "ARNGOESHERE"
+  default     = "ARNGOESHERE"
   description = "arn of SQS used by thumbs"
 }

@@ -1,11 +1,11 @@
 variable "lambda_name" {
-  default = "processor"
+  default     = "processor"
   description = "processor function name"
 }
 
 variable "tags" {
   default = {
-    Name = "processor",
+    Name     = "processor",
     function = "processor"
   }
   description = "resource tags"

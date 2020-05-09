@@ -2,8 +2,8 @@
 resource "aws_lambda_function" "parser" {
   function_name    = var.lambda_name
   description      = "parser of new entries"
-  handler          = "handler"
-  memory_size = 128
+  handler          = "handler.handler"
+  memory_size      = 128
   filename         = var.archive
   role             = aws_iam_role.parser-lambda.arn
   runtime          = "python3.8"

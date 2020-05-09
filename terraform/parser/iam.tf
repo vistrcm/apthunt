@@ -3,10 +3,10 @@ data "aws_iam_policy_document" "lambda_exec" {
   // function execution
   statement {
     actions = [
-      "sts:AssumeRole"]
+    "sts:AssumeRole"]
     principals {
       identifiers = [
-        "lambda.amazonaws.com"]
+      "lambda.amazonaws.com"]
       type = "Service"
     }
     effect = "Allow"
