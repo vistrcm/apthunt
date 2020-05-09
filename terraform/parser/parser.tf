@@ -7,9 +7,15 @@ resource "aws_lambda_function" "parser" {
   filename         = var.archive
   role             = aws_iam_role.parser-lambda.arn
   runtime          = "python3.8"
-  publish          = true
+  publish          = false
+  timeout          = 20
   source_code_hash = filesha256(var.archive)
 
+  environment {
+    variables = {
+      SQS_QUEUE_URL = var.sqs_thumbs_arn
+    }
+  }
   tags = var.tags
 }
 
