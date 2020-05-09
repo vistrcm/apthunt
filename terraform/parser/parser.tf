@@ -13,7 +13,7 @@ resource "aws_lambda_function" "parser" {
 
   environment {
     variables = {
-      SQS_QUEUE_URL = var.sqs_thumbs_arn
+      SQS_QUEUE_URL = var.sqs_thumbs_url
     }
   }
   tags = var.tags
