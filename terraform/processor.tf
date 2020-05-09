@@ -3,6 +3,15 @@ variable "lambda_name" {
   description = "processor function name"
 }
 
+locals {
+  # add Name for readability and merge with common tags
+  processor_tags = merge(local.common_tags,
+  {
+    "Name" = var.lambda_name,
+    "function" = "processor"
+  })
+}
+
 // create archive with function sources
 data "archive_file" "lambda_zip" {
   type        = "zip"
@@ -21,18 +30,14 @@ resource "aws_lambda_function" "processor" {
   publish          = true
   source_code_hash = filesha256(data.archive_file.lambda_zip.source_file)
 
-  # add Name for readability and merge with common tags
-  tags = merge(local.common_tags, { "Name" = "processor" })
+  tags = local.processor_tags
 }
-
-
 
 resource "aws_cloudwatch_log_group" "processor_logs" {
   name              = "/aws/lambda/${var.lambda_name}"
   retention_in_days = 14
 
-  # add Name for readability and merge with common tags
-  tags = merge(local.common_tags, { "Name" = "processor" })
+  tags = local.processor_tags
 }
 
 // polocy for lambda
@@ -79,6 +84,6 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 resource "aws_iam_role" "processor-lambda" {
   name               = "processor-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_exec.json
-  # add Name for readability and merge with common tags
-  tags = merge(local.common_tags, { "Name" = "processor-exec-role" })
+
+  tags = local.processor_tags
 }
