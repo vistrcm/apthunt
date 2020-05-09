@@ -14,3 +14,12 @@ variable "tags" {
 variable "archive" {
   default = "../parser/out/parser.zip"
 }
+
+variable "dynamo_table_arn" {
+  default = "ARNGOESHERE"
+  description = "arn of dynamo table used by parser"
+}
+variable "sqs_thumbs_arn" {
+  default = "ARNGOESHERE"
+  description = "arn of SQS used by thumbs"
+}
