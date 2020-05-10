@@ -30,7 +30,7 @@ func validateURLs(records []string) error {
 	}
 
 	if len(errs) > 0 { // errors found
-		return fmt.Errorf("found mailformed urls: %+v", errs)
+		return fmt.Errorf("found mailformed urls: %+v", errs) //nolint:goerr113 // return list of errors here
 	}
 
 	return nil

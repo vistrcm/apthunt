@@ -27,7 +27,7 @@ var (
 	l *lgr.Logger      //nolint:gochecknoglobals
 )
 
-//init function required for AWS lambda optimization
+//init function required for AWS lambda optimization.
 func init() { //nolint:gochecknoinits
 	//config xray
 	err := xray.Configure(xray.Config{LogLevel: "info"})
@@ -68,13 +68,13 @@ func Handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 		records := parseInput(input)
 
 		if err := validateURLs(records); err != nil {
-			panic(fmt.Errorf("URL validation failed: %v", err))
+			panic(fmt.Errorf("URL validation failed: %w", err))
 		}
 
 		for _, r := range records {
 			err := t.Process(ctx, r)
 			if err != nil {
-				panic(fmt.Errorf("error processing %q: %v", r, err))
+				panic(fmt.Errorf("error processing %q: %w", r, err))
 			}
 		}
 	}

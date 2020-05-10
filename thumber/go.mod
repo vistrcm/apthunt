@@ -1,6 +1,6 @@
 module github.com/vistrcm/apthunt/thumber
 
-go 1.13
+go 1.14
 
 require (
 	github.com/aws/aws-lambda-go v1.13.3
