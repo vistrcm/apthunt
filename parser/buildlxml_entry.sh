@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 LXML_TO_INSTALL=${LXML_VER:-lxml==4.2.1}
 
 yum update -y
