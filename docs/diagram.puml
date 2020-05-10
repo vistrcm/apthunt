@@ -1,0 +1,43 @@
+@startuml
+cloud CL
+usecase searcher
+usecase parser
+usecase thumber
+usecase processor
+component predictor
+
+searcher ==> searcher: hourly?
+
+CL <- searcher: GET main page
+CL -> searcher: main page
+
+searcher --> parser: list of pages
+CL <- parser: GET page
+CL -> parser: page content
+
+control "SQS: apthunt-thumbs" as sqs_thumbs
+parser -> sqs_thumbs: thumb URLs
+
+sqs_thumbs -> thumber
+
+database "Dynamo: thumbs" as dynamo_thumbs
+cloud internet
+internet <-- thumber: get image
+internet --> thumber: image
+
+database "S3: apthunt.thumbs" as s3_thumbs
+
+thumber --> s3_thumbs: save image
+thumber -> dynamo_thumbs: store thumbs mapping
+
+control "SQS: apthunt-thumbs" as sqs_parser
+parser --> sqs_parser: parsed records
+sqs_parser --> processor
+
+predictor <- processor: get prediction
+predictor -> processor: prediction
+
+actor user
+processor .> user: notification
+
+@enduml
