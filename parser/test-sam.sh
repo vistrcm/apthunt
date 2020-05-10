@@ -4,7 +4,7 @@ set -x
 set -v 
 set -e
 
-# start dynamodb local
+# start DynamoDB local
 docker network create lambda-local
 docker run -d -p 8000:8000 --name dynamodb cnadiminti/dynamodb-local
 
