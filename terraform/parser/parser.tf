@@ -9,7 +9,7 @@ resource "aws_lambda_function" "parser" {
   runtime          = "python3.6"
   publish          = false
   timeout          = 20
-  source_code_hash = filesha256(var.archive)
+  source_code_hash = filebase64sha256(var.archive)
 
   environment {
     variables = {

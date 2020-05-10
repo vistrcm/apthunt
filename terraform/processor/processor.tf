@@ -14,7 +14,7 @@ resource "aws_lambda_function" "processor" {
   role             = aws_iam_role.processor-lambda.arn
   runtime          = "go1.x"
   publish          = true
-  source_code_hash = filesha256(data.archive_file.lambda_zip.source_file)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
 
   tags = var.tags
 }
