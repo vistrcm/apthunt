@@ -13,8 +13,9 @@ provider "aws" {
 }
 
 module "processor" {
-  source = "./processor"
-  tags   = local.processor_tags
+  source         = "./processor"
+  parser_sqs_out = module.parser.parser_sqs_out
+  tags           = local.processor_tags
 }
 
 module "parser" {
