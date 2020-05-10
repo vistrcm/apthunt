@@ -9,6 +9,9 @@ aws-xray-sdk = "*"
 "boto3" = "*"
 
 [dev-packages]
+pycodestyle = "*"
+pylint = "*"
+moto = "*"
 
 [requires]
 python_version = "3"
