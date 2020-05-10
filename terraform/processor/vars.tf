@@ -3,6 +3,11 @@ variable "lambda_name" {
   description = "processor function name"
 }
 
+variable "parser_sqs_out" {
+  default     = "ARN goes here"
+  description = "ARN of SQS query with parser results"
+}
+
 variable "tags" {
   default = {
     Name     = "processor",
