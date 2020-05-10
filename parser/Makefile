@@ -25,7 +25,7 @@ pylint: handler.py clparser.py
 
 check: pycodestyle pylint
 
-test-sam: check
+test-sam: check package lxml
 	./test-sam.sh
 
 test-py: test.py
@@ -36,7 +36,7 @@ test: check test-py test-sam
 package: out_dir handler.py clparser.py
 	mkdir -p $(OUTDIR)/package && \
 	pipenv lock -r > $(OUTDIR)/requirements_tmp.txt && \
-	pipenv run pip install -t $(OUTDIR)/package -r $(OUTDIR)/requirements_tmp.txt &&\
+	pipenv run pip install --upgrade -t $(OUTDIR)/package -r $(OUTDIR)/requirements_tmp.txt &&\
 	cp handler.py clparser.py $(OUTDIR)/package
 
 zip: handler.py clparser.py out_dir package lxml
