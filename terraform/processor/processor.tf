@@ -76,12 +76,12 @@ resource "aws_iam_role" "processor-lambda" {
 
 //AWSLambdaBasicExecutionRole
 resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecutionRole" {
-  policy_arn = aws_iam_role.processor-lambda.name
-  role       = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.processor-lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 //AWSLambdaBasicExecutionRole
 resource "aws_iam_role_policy_attachment" "AWSXRayDaemonWriteAccess" {
-  policy_arn = aws_iam_role.processor-lambda.name
-  role       = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+  role       = aws_iam_role.processor-lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
