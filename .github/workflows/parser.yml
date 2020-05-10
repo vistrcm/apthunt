@@ -16,6 +16,9 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.7]
+    defaults:
+      run:
+        working-directory: ./parser/
 
     steps:
     - uses: actions/checkout@v1
@@ -29,21 +32,17 @@ jobs:
         pipenv sync --dev
     - name: pycodestyle
       run: |
-        cd parser
         pipenv run pycodestyle --show-source --show-pep8 --config .pycodestyle handler.py clparser.py
     - name: pylint
       run: |
-        cd parser
         pipenv run pylint handler.py clparser.py
     - name: unit
       run: |
         # export region to fix test exception on AWS region
         export export AWS_DEFAULT_REGION=us-west-1
-        cd parser
         pipenv run python -m unittest discover -v
     - name: Lint with flake8
       run: |
-        cd parser
         pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
