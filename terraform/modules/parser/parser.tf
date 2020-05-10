@@ -8,6 +8,9 @@ resource "aws_lambda_function" "parser" {
   role             = aws_iam_role.parser-lambda.arn
   runtime          = "python3.6"
   publish          = false
+  tracing_config {
+    mode = "Active"
+  }
   timeout          = 20
   source_code_hash = filebase64sha256(var.archive)
 

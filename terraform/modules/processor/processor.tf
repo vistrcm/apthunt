@@ -13,7 +13,10 @@ resource "aws_lambda_function" "processor" {
   filename         = data.archive_file.lambda_zip.output_path
   role             = aws_iam_role.processor-lambda.arn
   runtime          = "go1.x"
-  publish          = true
+  publish          = false
+  tracing_config {
+    mode = "Active"
+  }
   source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
 
   tags = var.tags
