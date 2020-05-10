@@ -6,7 +6,7 @@ resource "aws_lambda_function" "parser" {
   memory_size      = 128
   filename         = var.archive
   role             = aws_iam_role.parser-lambda.arn
-  runtime          = "python3.8"
+  runtime          = "python3.6"
   publish          = false
   timeout          = 20
   source_code_hash = filesha256(var.archive)
