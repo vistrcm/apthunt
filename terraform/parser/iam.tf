@@ -120,3 +120,15 @@ resource "aws_iam_role_policy_attachment" "lambda_sqs" {
   role       = aws_iam_role.parser-lambda.name
   policy_arn = aws_iam_policy.lambda_sqs.arn
 }
+
+//AWSLambdaBasicExecutionRole
+resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecutionRole" {
+  policy_arn = aws_iam_role.parser-lambda.name
+  role       = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+//AWSLambdaBasicExecutionRole
+resource "aws_iam_role_policy_attachment" "AWSXRayDaemonWriteAccess" {
+  policy_arn = aws_iam_role.parser-lambda.name
+  role       = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
