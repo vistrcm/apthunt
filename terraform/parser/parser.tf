@@ -25,3 +25,18 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 
   tags = var.tags
 }
+
+// SQS to other services, like processor
+resource "aws_sqs_queue" "output" {
+  name = "parser2processor"
+  tags = var.tags
+}
+
+resource "aws_lambda_function_event_invoke_config" "sqs_to_processor" {
+  function_name = aws_lambda_function.parser.arn
+  destination_config {
+    on_success {
+      destination = aws_sqs_queue.output.arn
+    }
+  }
+}
