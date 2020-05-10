@@ -19,7 +19,7 @@ module "processor" {
 }
 
 module "parser" {
-  source           = "./parser"
+  source           = "./modules/parser"
   dynamo_table_arn = "arn:aws:dynamodb:us-west-1:629476760390:table/apthunt"
   sqs_thumbs_arn   = "arn:aws:sqs:us-west-1:629476760390:apthunt-thumbs"
   sqs_thumbs_url   = "https://sqs.us-west-1.amazonaws.com/629476760390/apthunt-thumbs"
