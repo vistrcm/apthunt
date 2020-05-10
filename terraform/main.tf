@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "processor" {
-  source         = "./processor"
+  source         = "./modules/processor"
   parser_sqs_out = module.parser.parser_sqs_out
   tags           = local.processor_tags
 }
