@@ -30,6 +30,12 @@ resource "aws_cloudwatch_log_group" "processor_logs" {
 }
 
 resource "aws_lambda_event_source_mapping" "processor_trigger" {
-  event_source_arn = var.parser_sqs_out
+  event_source_arn = aws_sqs_queue.input.arn
   function_name    = aws_lambda_function.processor.arn
+}
+
+// SQS for incoming events
+resource "aws_sqs_queue" "input" {
+  name = "processor-in"
+  tags = var.tags
 }

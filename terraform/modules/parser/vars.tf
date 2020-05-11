@@ -29,3 +29,8 @@ variable "sqs_thumbs_url" {
   default     = "URLGOESHERE"
   description = "URL of SQS used by thumbs"
 }
+
+variable "sqs_processor_arn" {
+  default     = "ARNGOESHERE"
+  description = "ARN of SQS input to processor"
+}

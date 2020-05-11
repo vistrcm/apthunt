@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "lambda_sqs_from_parser" {
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
     ]
-    resources = [var.parser_sqs_out]
+    resources = [aws_sqs_queue.input.arn]
     effect    = "Allow"
   }
 }

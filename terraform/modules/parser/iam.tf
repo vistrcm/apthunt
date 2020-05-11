@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "lambda_sqs" {
       "sqs:ChangeMessageVisibilityBatch",
       "sqs:SetQueueAttributes",
     ]
-    resources = [var.sqs_thumbs_arn, aws_sqs_queue.output.arn]
+    resources = [var.sqs_thumbs_arn, var.sqs_processor_arn]
     effect    = "Allow"
   }
 }

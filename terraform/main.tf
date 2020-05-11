@@ -14,7 +14,6 @@ provider "aws" {
 
 module "processor" {
   source         = "./modules/processor"
-  parser_sqs_out = module.parser.parser_sqs_out
   tags           = local.processor_tags
 }
 
@@ -23,6 +22,7 @@ module "parser" {
   dynamo_table_arn = "arn:aws:dynamodb:us-west-1:629476760390:table/apthunt"
   sqs_thumbs_arn   = "arn:aws:sqs:us-west-1:629476760390:apthunt-thumbs"
   sqs_thumbs_url   = "https://sqs.us-west-1.amazonaws.com/629476760390/apthunt-thumbs"
+  sqs_processor_arn = module.processor.sqs_processor_arn
   tags             = local.parser_tags
 }
 
