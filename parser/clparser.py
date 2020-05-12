@@ -3,7 +3,6 @@ import json
 import sys
 
 from aws_xray_sdk.core import xray_recorder
-
 from requests_html import HTMLSession, HTMLResponse
 
 
