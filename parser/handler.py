@@ -47,37 +47,9 @@ def respond(err, res=None, code=400):
 
 @xray_recorder.capture('handler')
 def handler(event, context):
-    """request handler
-
-    To scan a DynamoDB table, make a GET request with the TableName as a
-    query string parameter. To put, update, or delete an item, make a POST,
-    PUT, or DELETE request respectively, passing in the payload to the
-    DynamoDB API as a JSON body. Some requests may be disabled.
-
-    expecting request body to be similar to
-    {
-        "FeedTitle": "{{FeedTitle}}",
-        "FeedUrl": "{{FeedUrl}}",
-        "PostTitle": "{{PostTitle}}",
-        "PostUrl": "{{PostUrl}}",
-        "PostContent": "{{PostContent}}",
-        "PostPublished": "{{PostPublished}}"
-    }
-    """
+    """request handler"""
     LOGGER.debug("context: %s", context)
     LOGGER.debug("event: %s", json.dumps(event, indent=4))
-
-    operations = {
-        # disable some operations
-        # 'DELETE': lambda dynamo, x: dynamo.delete_item(**x),
-        # 'PUT': lambda dynamo, x: dynamo.update_item(**x),
-        'GET': lambda x: TABLE.scan(**x),
-        'POST': put_item,
-    }
-
-    operation = event['httpMethod']
-    if operation not in operations:
-        return respond(ValueError('Unsupported method "{}"'.format(operation)))
 
     raw_body = event['body']
 
@@ -88,17 +60,17 @@ def handler(event, context):
         msg = "Could not parse body. Ex: '{}'".format(ex)
         LOGGER.warning(msg)
         return respond(ValueError(msg))
+
     LOGGER.debug("body: '%s'", body)
 
-    payload = event['queryStringParameters'] if operation == 'GET' else body
     try:
-        resp = operations[operation](payload)
+        resp = put_item(body)
     except Exception as ex:  # pylint: disable=broad-except
-        msg = "got exception doing '{}' on with '{}': {}".format(operations[operation], payload, ex)
+        msg = "got exception doing put_item with '{}': {}".format(body, ex)
         LOGGER.warning(msg, exc_info=True)
         return respond(ValueError(msg), code=500)
 
-    LOGGER.info("operation %s response: '%s'", operation, resp)
+    LOGGER.info("response: '%s'", resp)
     return respond(None, resp)
 
 
@@ -162,8 +134,3 @@ def put_item(item):
 
     processed_item = prepare4dynamo(item)
     return TABLE.put_item(Item=processed_item)
-
-
-def scan(query):
-    """scan table for items"""
-    return TABLE.scan(query)
