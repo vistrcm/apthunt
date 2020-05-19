@@ -1,5 +1,6 @@
 """parser module for parsing data from provided urls"""
 import json
+import re
 import sys
 
 from aws_xray_sdk.core import xray_recorder
@@ -63,12 +64,38 @@ def post_removed(post_body):
     return False
 
 
+def get_bedrooms(result):
+    bedrooms = None
+    housing = result["housing"]
+    # bedrooms
+    m = re.search(r'(\d+)br\s.*', housing)
+    if m:
+        bedrooms = float(m.group(1))
+    return bedrooms
+
+
+def get_area(item):
+    area = None
+    housing = item["housing"]
+    m = re.search(r'(\d+)ft2', housing)
+    if m:
+        area = float(m.group(1))
+    return area
+
+
+def get_type(item):
+    attrs = item["attrs"]
+    if not isinstance(attrs, list):
+        return None
+    types = {"apartment", "townhouse", "loft", "land", "house", "duplex", "flat", "condo", "cottage/cabin"}
+    return ",".join(sorted(types & set(attrs)))
+
+
 @xray_recorder.capture('parse_page')
 def parse_page(page_url):
     """retrieve and parse html page"""
     # result format is here to have consistent results with default None
     result = {
-        "page_head": None,
         "postingtitletext": None,
         "price_text": None,
         "price": None,
@@ -82,6 +109,18 @@ def parse_page(page_url):
         "attrs": None,
         "postingbody": None,
         "notices": None,
+        "bedrooms": None,
+        "area": None,
+        "type": None,
+        "catsok": None,
+        "dogsok": None,
+        "garagea": None,
+        "garaged": None,
+        "furnished": None,
+        "laundryb": None,
+        "laundrys": None,
+        "wd": None,
+        "nthumbs": None,
     }
 
     post_body = get_page(page_url)
@@ -135,6 +174,20 @@ def parse_page(page_url):
     notices = userbody.find("ul.notices", first=True)
     if notices is not None:
         result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
+
+    # additional fields
+    result["bedrooms"] = get_bedrooms(result)
+    result["area"] = get_area(result)
+    result["type"] = get_type(result)
+    result["catsok"] = "cats are OK - purrr" in result["attrs"]
+    result["dogsok"] = "dogs are OK - wooof" in result["attrs"]
+    result["garagea"] = "attached garage" in result["attrs"]
+    result["garaged"] = "detached garage" in result["attrs"]
+    result["furnished"] = "furnished" in result["attrs"]
+    result["laundryb"] = "laundry in bldg" in result["attrs"]
+    result["laundrys"] = "laundry on site" in result["attrs"]
+    result["wd"] = "w/d in unit" in result["attrs"]
+    result["nthumbs"] = len(result["thumbs"]) if result["thumbs"] is not None else 0
     return result
 
 
