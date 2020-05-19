@@ -166,5 +166,5 @@ def put_item(item):
 
     processed_item = prepare4dynamo(item)
     dynamo_res = TABLE.put_item(Item=processed_item)
-    send_2_processor(SQS_PR, SQS_PR_QUEUE_URL, parsed)
+    send_2_processor(SQS_PR, SQS_PR_QUEUE_URL, item)
     return dynamo_res
