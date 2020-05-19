@@ -33,6 +33,10 @@ TABLE = DYNAMO.Table(os.getenv("TABLE_NAME", "apthunt"))
 SQS = boto3.client('sqs')
 SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL", "")
 
+# client to processor
+SQS_PR = boto3.client('sqs')
+SQS_PR_QUEUE_URL = os.getenv("PROCESSOR_SQS_QUEUE_URL", "")
+
 
 def respond(err, res=None, code=400):
     """helper function to create valid proxy object for AWS lambda + proxy gateway"""
@@ -107,6 +111,34 @@ def que_thumbs(sqs, sqs_queue, item):
     LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
 
+def send_2_processor(sqs, sqs_queue, item):
+    msg = {
+        "latitude": item["parsed_data_latitude"],
+        "longitude": item["parsed_data_longitude"],
+        "district": item["parsed_district"],
+        "housing": item["parsed_housing"],
+        "bedrooms": item["parsed_bedrooms"],
+        "area": item["parsed_area"],
+        "type": item["parsed_type"],
+        "catsok": item["parsed_catsok"],
+        "dogsok": item["parsed_dogsok"],
+        "garagea": item["parsed_garagea"],
+        "garaged": item["parsed_garaged"],
+        "furnished": item["parsed_furnished"],
+        "laundryb": item["parsed_laundryb"],
+        "laundrys": item["parsed_laundrys"],
+        "wd": item["parsed_wd"],
+        "nthumbs": item["parsed_nthumbs"],
+        'price': item["parsed_price"],
+    }
+    msg = json.dumps(msg)
+    response = sqs.send_message(
+        QueueUrl=sqs_queue,
+        MessageBody=msg
+    )
+    LOGGER.info("processor SQS response message id: %s", response['MessageId'])
+
+
 @xray_recorder.capture('put_item')
 def put_item(item):
     """put item into dynamodb table.
@@ -133,4 +165,6 @@ def put_item(item):
         item["parsed_" + key] = value
 
     processed_item = prepare4dynamo(item)
-    return TABLE.put_item(Item=processed_item)
+    dynamo_res = TABLE.put_item(Item=processed_item)
+    send_2_processor(SQS_PR, SQS_PR_QUEUE_URL, parsed)
+    return dynamo_res
