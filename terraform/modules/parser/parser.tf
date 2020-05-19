@@ -17,7 +17,7 @@ resource "aws_lambda_function" "parser" {
   environment {
     variables = {
       SQS_QUEUE_URL           = var.sqs_thumbs_url
-      PROCESSOR_SQS_QUEUE_URL = var.sqs_processor_arn
+      PROCESSOR_SQS_QUEUE_URL = data.aws_sqs_queue.processor-input.url
     }
   }
   tags = var.tags
@@ -28,4 +28,8 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   retention_in_days = 14
 
   tags = var.tags
+}
+
+data "aws_sqs_queue" "processor-input" {
+  name = var.sqs_processor_name
 }

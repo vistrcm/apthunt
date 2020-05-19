@@ -18,12 +18,12 @@ module "processor" {
 }
 
 module "parser" {
-  source            = "./modules/parser"
-  dynamo_table_arn  = "arn:aws:dynamodb:us-west-1:629476760390:table/apthunt"
-  sqs_thumbs_arn    = "arn:aws:sqs:us-west-1:629476760390:apthunt-thumbs"
-  sqs_thumbs_url    = "https://sqs.us-west-1.amazonaws.com/629476760390/apthunt-thumbs"
-  sqs_processor_arn = module.processor.sqs_processor_arn
-  tags              = local.parser_tags
+  source             = "./modules/parser"
+  dynamo_table_arn   = "arn:aws:dynamodb:us-west-1:629476760390:table/apthunt"
+  sqs_thumbs_arn     = "arn:aws:sqs:us-west-1:629476760390:apthunt-thumbs"
+  sqs_thumbs_url     = "https://sqs.us-west-1.amazonaws.com/629476760390/apthunt-thumbs"
+  sqs_processor_name = module.processor.sqs_processor_name
+  tags               = local.parser_tags
 }
 
 locals {
