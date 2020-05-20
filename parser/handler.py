@@ -112,6 +112,7 @@ def que_thumbs(sqs, sqs_queue, item):
 
 
 def send_2_processor(sqs, sqs_queue, item):
+    """send item to the processor SQS"""
     msg = {
         "latitude": item["parsed_data_latitude"],
         "longitude": item["parsed_data_longitude"],
@@ -130,6 +131,7 @@ def send_2_processor(sqs, sqs_queue, item):
         "wd": item["parsed_wd"],
         "nthumbs": item["parsed_nthumbs"],
         'price': item["parsed_price"],
+        'url': item["PostUrl"],
     }
     msg = json.dumps(msg)
     response = sqs.send_message(
