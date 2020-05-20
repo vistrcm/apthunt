@@ -65,25 +65,28 @@ def post_removed(post_body):
 
 
 def get_bedrooms(result):
+    """parse amount of bedrooms from 'housing' field"""
     bedrooms = None
     housing = result["housing"]
     # bedrooms
-    m = re.search(r'(\d+)br\s.*', housing)
-    if m:
-        bedrooms = float(m.group(1))
+    match = re.search(r'(\d+)br\s.*', housing)
+    if match:
+        bedrooms = float(match.group(1))
     return bedrooms
 
 
 def get_area(item):
+    """parse area from 'housing' field"""
     area = None
     housing = item["housing"]
-    m = re.search(r'(\d+)ft2', housing)
-    if m:
-        area = float(m.group(1))
+    match = re.search(r'(\d+)ft2', housing)
+    if match:
+        area = float(match.group(1))
     return area
 
 
 def get_type(item):
+    """parse type of the item from 'attrs' field"""
     attrs = item["attrs"]
     if not isinstance(attrs, list):
         return None
@@ -179,14 +182,14 @@ def parse_page(page_url):
     result["bedrooms"] = get_bedrooms(result)
     result["area"] = get_area(result)
     result["type"] = get_type(result)
-    result["catsok"] = "cats are OK - purrr" in result["attrs"]
-    result["dogsok"] = "dogs are OK - wooof" in result["attrs"]
-    result["garagea"] = "attached garage" in result["attrs"]
-    result["garaged"] = "detached garage" in result["attrs"]
-    result["furnished"] = "furnished" in result["attrs"]
-    result["laundryb"] = "laundry in bldg" in result["attrs"]
-    result["laundrys"] = "laundry on site" in result["attrs"]
-    result["wd"] = "w/d in unit" in result["attrs"]
+    result["catsok"] = "cats are OK - purrr" in result.get("attrs", [])
+    result["dogsok"] = "dogs are OK - wooof" in result.get("attrs", [])
+    result["garagea"] = "attached garage" in result.get("attrs", [])
+    result["garaged"] = "detached garage" in result.get("attrs", [])
+    result["furnished"] = "furnished" in result.get("attrs", [])
+    result["laundryb"] = "laundry in bldg" in result.get("attrs", [])
+    result["laundrys"] = "laundry on site" in result.get("attrs", [])
+    result["wd"] = "w/d in unit" in result.get("attrs", [])
     result["nthumbs"] = len(result["thumbs"]) if result["thumbs"] is not None else 0
     return result
 
