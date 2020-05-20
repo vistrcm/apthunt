@@ -12,9 +12,22 @@ provider "aws" {
   region = "us-west-1"
 }
 
+variable "bot_url" {
+  default     = "https://localhost"
+  description = "telegram bot url. Secret, contains token"
+}
+
+variable "user_id" {
+  default     = "12345"
+  description = "if of telegram user to send messages to"
+}
+
+
 module "processor" {
-  source = "./modules/processor"
-  tags   = local.processor_tags
+  source  = "./modules/processor"
+  tags    = local.processor_tags
+  bot_url = var.bot_url
+  user_id = var.user_id
 }
 
 module "parser" {
