@@ -22,12 +22,17 @@ variable "user_id" {
   description = "if of telegram user to send messages to"
 }
 
+variable "predictor_url" {
+  default     = "http://localhost"
+  description = "url of the predictor application"
+}
 
 module "processor" {
-  source  = "./modules/processor"
-  tags    = local.processor_tags
-  bot_url = var.bot_url
-  user_id = var.user_id
+  source        = "./modules/processor"
+  tags          = local.processor_tags
+  bot_url       = var.bot_url
+  user_id       = var.user_id
+  predictor_url = var.predictor_url
 }
 
 module "parser" {

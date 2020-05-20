@@ -20,3 +20,8 @@ variable "user_id" {
   default     = "12345"
   description = "if of telegram user to send messages to"
 }
+
+variable "predictor_url" {
+  default     = "http://localhost"
+  description = "url of the predictor application"
+}

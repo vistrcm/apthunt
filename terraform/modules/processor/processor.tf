@@ -21,8 +21,9 @@ resource "aws_lambda_function" "processor" {
 
   environment {
     variables = {
-      BOT_URL = var.bot_url
-      USER_ID = var.user_id
+      BOT_URL       = var.bot_url
+      USER_ID       = var.user_id
+      PREDICTOR_URL = var.predictor_url
     }
   }
 
