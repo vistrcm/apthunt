@@ -19,6 +19,13 @@ resource "aws_lambda_function" "processor" {
   }
   source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
 
+  environment {
+    variables = {
+      BOT_URL = var.bot_url
+      USER_ID = var.user_id
+    }
+  }
+
   tags = var.tags
 }
 
