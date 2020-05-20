@@ -18,7 +18,7 @@ lint:
 .PHONY: build_handler
 build_handler: precommit out/handler
 
-out/handler: cmd/lambda/handler.go
+out/handler: cmd/lambda/handler.go processor.go
 	GOOS=linux go build -o out/handler cmd/lambda/handler.go
 
 .PHONY: clean
