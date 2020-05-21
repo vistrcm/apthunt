@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	threshold = 300
+	threshold = 500
 )
 
 type record struct {
