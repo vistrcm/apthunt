@@ -14,6 +14,7 @@ resource "aws_lambda_function" "processor" {
   role          = aws_iam_role.processor-lambda.arn
   runtime       = "go1.x"
   publish       = false
+  reserved_concurrent_executions = 1
   tracing_config {
     mode = "Active"
   }
