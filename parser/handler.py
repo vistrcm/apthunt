@@ -167,8 +167,9 @@ def get_md5(data):
 
 def generate_id(item):
     """generate id for the item"""
-    LOGGER.debug("generating id for the item: %s", item)
-    return uuid.uuid4().hex
+    gen_id = get_md5(item)
+    LOGGER.debug("generated id '%s' for the item: %s", gen_id, item)
+    return gen_id.hexdigest()
 
 
 @xray_recorder.capture('put_item')
