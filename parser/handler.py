@@ -1,4 +1,5 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
+import hashlib
 import json
 import logging
 import os
@@ -140,6 +141,28 @@ def send_2_processor(sqs, sqs_queue, item):
         MessageBody=msg
     )
     LOGGER.info("processor SQS response message id: %s", response['MessageId'])
+
+
+def get_md5(data):
+    """calculate 'md5' for the data structure
+
+    Go deep into dict and lists by calculating md5 for keys and values. Not sorted lists.
+    """
+    data_hash = hashlib.md5()
+
+    if isinstance(data, dict):
+        for key in sorted(data.keys()):
+            data_hash.update(key.encode('utf8'))
+            data_hash.update(get_md5(data[key]).digest())
+    elif isinstance(data, list):
+        for val in data:
+            data_hash.update(get_md5(val).digest())
+    elif isinstance(data, str):
+        data_hash.update(data.encode('utf-8'))
+    else:
+        data_hash.update(str(data).encode('utf8'))
+
+    return data_hash
 
 
 def generate_id(item):
