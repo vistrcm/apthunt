@@ -65,3 +65,30 @@ Content-Type: application/json
     "nthumbs": 18
   }
 ]
+
+
+###
+
+POST https://tab-predictor.apthunt.vitko.info/predictor/
+Content-Type: application/json
+
+[
+  {
+    "latitude": 37.374441,
+    "longitude": -122.026671,
+    "district": "sunnyvale",
+    "housing": "1br",
+    "bedrooms": 0,
+    "area": 0,
+    "type": "apartment",
+    "catsok": true,
+    "dogsok": true,
+    "garagea": false,
+    "garaged": false,
+    "furnished": true,
+    "laundryb": false,
+    "laundrys": false,
+    "wd": false,
+    "nthumbs": 4
+  }
+]

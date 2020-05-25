@@ -111,6 +111,7 @@ def que_thumbs(sqs, sqs_queue, item):
     LOGGER.info("thumb SQS response message id: %s", response['MessageId'])
 
 
+@xray_recorder.capture('send_2_processor')
 def send_2_processor(sqs, sqs_queue, item):
     """send item to the processor SQS"""
     msg = {
@@ -141,6 +142,12 @@ def send_2_processor(sqs, sqs_queue, item):
     LOGGER.info("processor SQS response message id: %s", response['MessageId'])
 
 
+def generate_id(item):
+    """generate id for the item"""
+    LOGGER.debug("generating id for the item: %s", item)
+    return uuid.uuid4().hex
+
+
 @xray_recorder.capture('put_item')
 def put_item(item):
     """put item into dynamodb table.
@@ -150,21 +157,23 @@ def put_item(item):
     `intid` - generated uuid4 working as primary key."""
     # extend a little bit
     post_url = item["PostUrl"]
-    item["added"] = int(datetime.utcnow().timestamp() * 1000)
-    item["intid"] = uuid.uuid4().hex
 
     # parse_page can throw PostRemovedException
     # this means post removed. No need to proceed.
     try:
         parsed = parse_page(post_url)
-        que_thumbs(SQS, SQS_QUEUE_URL, parsed)
     except (PostRemovedException, CL404Exception):
         LOGGER.info("Post removed: %s", post_url)
         return {"message": "post removed", "item": item}
 
+    que_thumbs(SQS, SQS_QUEUE_URL, parsed)
+
     # extend item with parsed data
     for key, value in parsed.items():
         item["parsed_" + key] = value
+
+    item["intid"] = generate_id(item)
+    item["added"] = int(datetime.utcnow().timestamp() * 1000)
 
     processed_item = prepare4dynamo(item)
     dynamo_res = TABLE.put_item(Item=processed_item)
