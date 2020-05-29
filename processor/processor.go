@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math"
 	"net/http"
 	"os"
 
@@ -14,7 +13,8 @@ import (
 )
 
 const (
-	threshold = 500
+	threshold       = 500
+	acceptablePrice = 3000
 )
 
 type record struct {
@@ -125,7 +125,7 @@ func (p *Processor) ProcessMessage(data string) error {
 	for _, prediction := range predictions {
 		p.l.Logf("INFO url: %q. prediction: %f. price: %f", extRec.URL, prediction.Price, extRec.Price)
 
-		if math.Abs(prediction.Price-extRec.Price) > threshold {
+		if worthNotification(extRec, prediction) {
 			p.l.Logf("INFO interesting result")
 
 			err := p.message(extRec, prediction.Price)
@@ -136,6 +136,16 @@ func (p *Processor) ProcessMessage(data string) error {
 	}
 
 	return nil
+}
+
+func worthNotification(target, prediction extendedRecord) bool {
+	if (prediction.Price - target.Price) > threshold {
+		if target.Price < acceptablePrice {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (p *Processor) predict(r record) ([]extendedRecord, error) {
