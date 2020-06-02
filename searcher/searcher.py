@@ -20,12 +20,7 @@ def send_to_parser(parser_url, link):
     """send link to parser url in specific format"""
 
     data = {
-        "FeedTitle": "simulated",
-        "FeedUrl": "simulated",
-        "PostTitle": "simulated",
         "PostUrl": link,
-        "PostContent": "simulated",
-        "PostPublished": "simulated"
     }
 
     print("sending to parser {}: {}. Data: '{}'".format(parser_url, link, data))
