@@ -8,6 +8,7 @@ const (
 
 var (
 	// emulate sets with map of string->bool
+	// by default map returns "zero value", false
 	skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 		"oakland east":      true,
 		"san jose downtown": true,
@@ -25,8 +26,7 @@ func worthNotification(target, prediction extendedRecord) bool {
 	}
 
 	// skip some districts
-	_, skip := skipDistrict[target.District]
-	if skip {
+	if skipDistrict[target.District] {
 		return false
 	}
 
