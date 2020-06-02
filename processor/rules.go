@@ -12,6 +12,8 @@ var (
 		"oakland east":      true,
 		"san jose downtown": true,
 		"sunnyvale":         true,
+		"berkeley":          true,
+		"Emeryville":        true,
 	}
 )
 
