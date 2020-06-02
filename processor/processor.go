@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/go-pkgz/lgr"
@@ -195,10 +194,10 @@ func (p *Processor) message(rec extendedRecord, prediction float64) error {
 
 	p.l.Logf("INFO sending message to the user: %q", userID)
 
-	toSend := fmt.Sprintf("%q looks interesting.\nPrice: %f. \nPrediction: %f", rec.URL, rec.Price, prediction)
+	message := fmt.Sprintf("%s\n\nPrice: %f \nPrediction: %f", rec.URL, rec.Price, prediction)
 	payload := botRequest{
 		ChatID: userID,
-		Text:   url.QueryEscape(toSend),
+		Text:   message,
 	}
 
 	var jsonStr, marshalErr = json.Marshal(payload)
