@@ -7,14 +7,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/go-pkgz/lgr"
-)
-
-const (
-	threshold       = 500
-	acceptablePrice = 3000
 )
 
 type record struct {
@@ -46,6 +42,11 @@ type botResponse struct {
 	Ok bool `json:"ok"`
 }
 
+type botRequest struct {
+	ChatID string `json:"chat_id"`
+	Text   string `json:"text"`
+}
+
 //ErrBadBotResponse indicates failure of getting url.
 var ErrBadBotResponse = errors.New("bad bot response")
 
@@ -72,10 +73,9 @@ func getExtRecords(data []byte) ([]extendedRecord, error) {
 	return rec, nil
 }
 
-//Processor message processor: parse message, predict price and send message if difference is bigger than Threshold.
+//Processor message processor: parse message, predict price and send message if worthNotification().
 type Processor struct {
 	l          *lgr.Logger
-	threshold  int
 	httpClient *http.Client
 }
 
@@ -83,13 +83,6 @@ type Processor struct {
 func WithLogger(l *lgr.Logger) func(*Processor) {
 	return func(processor *Processor) {
 		processor.l = l
-	}
-}
-
-//WithThreshold optional function to set threshold for the processor.
-func WithThreshold(t int) func(*Processor) {
-	return func(processor *Processor) {
-		processor.threshold = t
 	}
 }
 
@@ -102,7 +95,7 @@ func WithHTTPClient(c *http.Client) func(*Processor) {
 
 //NewProcessor builds new processor.
 func NewProcessor(options ...func(*Processor)) Processor {
-	proc := Processor{threshold: threshold}
+	proc := Processor{}
 
 	for _, option := range options {
 		option(&proc)
@@ -136,16 +129,6 @@ func (p *Processor) ProcessMessage(data string) error {
 	}
 
 	return nil
-}
-
-func worthNotification(target, prediction extendedRecord) bool {
-	if (prediction.Price - target.Price) > threshold {
-		if target.Price < acceptablePrice {
-			return true
-		}
-	}
-
-	return false
 }
 
 func (p *Processor) predict(r record) ([]extendedRecord, error) {
@@ -212,12 +195,10 @@ func (p *Processor) message(rec extendedRecord, prediction float64) error {
 
 	p.l.Logf("INFO sending message to the user: %q", userID)
 
-	payload := struct {
-		ChatID string `json:"chat_id"`
-		Text   string `json:"text"`
-	}{
+	toSend := fmt.Sprintf("%q looks interesting.\nPrice: %f. \nPrediction: %f", rec.URL, rec.Price, prediction)
+	payload := botRequest{
 		ChatID: userID,
-		Text:   fmt.Sprintf("%q looks interesting. Price: %f. Prediction: %f", rec.URL, rec.Price, prediction),
+		Text:   url.QueryEscape(toSend),
 	}
 
 	var jsonStr, marshalErr = json.Marshal(payload)
