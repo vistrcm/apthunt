@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "lambda_logging" {
 
 # create logging policy
 resource "aws_iam_policy" "lambda_logging" {
+  name        = "processor-logging"
   description = "role for processor logging"
   policy      = data.aws_iam_policy_document.lambda_logging.json
 }
@@ -73,6 +74,7 @@ data "aws_iam_policy_document" "lambda_sqs_from_parser" {
 }
 
 resource "aws_iam_policy" "lambda_sqs_from_parser" {
+  name        = "processor-sqs"
   description = "role for parser tracing"
   policy      = data.aws_iam_policy_document.lambda_sqs_from_parser.json
 }

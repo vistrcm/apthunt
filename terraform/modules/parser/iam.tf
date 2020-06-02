@@ -34,6 +34,7 @@ data "aws_iam_policy_document" "lambda_logging" {
 }
 
 resource "aws_iam_policy" "lambda_logging" {
+  name        = "parser-logging"
   description = "role for parser logging"
   policy      = data.aws_iam_policy_document.lambda_logging.json
 }
@@ -56,6 +57,7 @@ data "aws_iam_policy_document" "lambda_trace" {
 }
 
 resource "aws_iam_policy" "lambda_tracing" {
+  name        = "parser-tracing"
   description = "role for parser tracing"
   policy      = data.aws_iam_policy_document.lambda_trace.json
 }
@@ -82,6 +84,7 @@ data "aws_iam_policy_document" "lambda_dynamo" {
 }
 
 resource "aws_iam_policy" "lambda_dynamo" {
+  name        = "parser-dynamo"
   description = "role for parser tracing"
   policy      = data.aws_iam_policy_document.lambda_dynamo.json
 }
@@ -112,7 +115,8 @@ data "aws_iam_policy_document" "lambda_sqs" {
 }
 
 resource "aws_iam_policy" "lambda_sqs" {
-  description = "role for parser tracing"
+  name        = "parser-sqs"
+  description = "role for parser SQS access"
   policy      = data.aws_iam_policy_document.lambda_sqs.json
 }
 

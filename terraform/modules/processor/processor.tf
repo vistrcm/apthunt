@@ -7,13 +7,13 @@ data "archive_file" "lambda_zip" {
 
 // lambda function
 resource "aws_lambda_function" "processor" {
-  function_name = var.lambda_name
-  description   = "processor of new entries"
-  handler       = "handler"
-  filename      = data.archive_file.lambda_zip.output_path
-  role          = aws_iam_role.processor-lambda.arn
-  runtime       = "go1.x"
-  publish       = false
+  function_name                  = var.lambda_name
+  description                    = "processor of new entries"
+  handler                        = "handler"
+  filename                       = data.archive_file.lambda_zip.output_path
+  role                           = aws_iam_role.processor-lambda.arn
+  runtime                        = "go1.x"
+  publish                        = false
   reserved_concurrent_executions = 1
   tracing_config {
     mode = "Active"
