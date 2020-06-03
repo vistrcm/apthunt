@@ -171,6 +171,16 @@ def generate_id(item):
     return gen_id.hexdigest()
 
 
+@xray_recorder.capture('item_exist')
+def item_exist(table, item):
+    """check if item exist in dynamo table"""
+
+    key = {'intid': item["intid"]}
+    item = table.get_item(Key=key, ProjectionExpression='intid')
+
+    return "Item" in item.keys()
+
+
 @xray_recorder.capture('put_item')
 def put_item(item):
     """put item into dynamodb table.
@@ -197,6 +207,10 @@ def put_item(item):
 
     item["intid"] = generate_id(item)
     item["added"] = int(datetime.utcnow().timestamp() * 1000)
+
+    if item_exist(TABLE, item):
+        LOGGER.info("duplicate post: %s, %s", item["intid"], item["PostUrl"])
+        return {"duplicate": item}
 
     processed_item = prepare4dynamo(item)
     dynamo_res = TABLE.put_item(Item=processed_item)
