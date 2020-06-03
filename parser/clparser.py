@@ -207,9 +207,11 @@ def parse_map(map_and_attrs):
     map_address = map_and_attrs.find(".mapaddress", first=True)
     if map_address:
         map_data["map_address"] = map_address.text
-    map_link = map_and_attrs.find("p.mapaddress", first=True).find("a", first=True)
-    if map_link:
-        map_data["map_link"] = map_link.attrs["href"]
+    map_link_p = map_and_attrs.find("p.mapaddress", first=True)
+    if map_link_p:
+        map_link = map_link_p.find("a", first=True)
+        if map_link:
+            map_data["map_link"] = map_link.attrs["href"]
 
     return map_data
 
