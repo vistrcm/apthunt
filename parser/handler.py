@@ -14,7 +14,7 @@ from aws_xray_sdk.core import xray_recorder
 from clparser import parse_request_body, parse_page, PostRemovedException, CL404Exception
 
 # x-ray tracing
-patch(['boto3'])
+patch(['boto3', 'botocore'])
 
 LOGGER = logging.getLogger()
 if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
