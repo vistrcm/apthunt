@@ -10,15 +10,24 @@ var (
 	// emulate sets with map of string->bool
 	// by default map returns "zero value", false
 	skipDistrict = map[string]bool{ //nolint: gochecknoglobals
-		"oakland east":           true,
-		"san jose downtown":      true,
-		"sunnyvale":              true,
-		"berkeley":               true,
-		"Emeryville":             true,
-		"Larkfield":              true,
-		"san jose west":          true,
-		"berkeley north / hills": true,
-		//"oakland lake merritt / grand": true,
+		"oakland east":                 true,
+		"san jose downtown":            true,
+		"sunnyvale":                    true,
+		"berkeley":                     true,
+		"Emeryville":                   true,
+		"Larkfield":                    true,
+		"san jose west":                true,
+		"berkeley north / hills":       true,
+		"oakland downtown":             true,
+		"oakland piedmont / montclair": true,
+		"oakland lake merritt / grand": true,
+		"emeryville":                   true,
+		"los gatos":                    true,
+		"redwood city":                 true,
+		"santa clara":                  true,
+		"NORTH OAKLAND TEMESCAL":       true,
+		"san jose north":               true,
+		"palo alto":                    true,
 	}
 )
 
