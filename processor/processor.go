@@ -6,11 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"os"
 
 	"github.com/go-pkgz/lgr"
 )
+
+const ceilUnit = 100.00 // ceil all prices to 100
 
 type record struct {
 	Latitude  float64 `json:"latitude"`
@@ -103,6 +106,10 @@ func NewProcessor(options ...func(*Processor)) Processor {
 	return proc
 }
 
+func ceil(x, unit float64) float64 {
+	return math.Ceil(x/unit) * unit
+}
+
 func (p *Processor) ProcessMessage(data string) error {
 	extRec, err := getExtRecord([]byte(data))
 	if err != nil {
@@ -116,6 +123,9 @@ func (p *Processor) ProcessMessage(data string) error {
 
 	for _, prediction := range predictions {
 		p.l.Logf("INFO url: %q. prediction: %f. price: %f", extRec.URL, prediction.Price, extRec.Price)
+
+		// ceil a price
+		prediction.Price = ceil(prediction.Price, ceilUnit)
 
 		if worthNotification(extRec, prediction) {
 			p.l.Logf("INFO interesting result")
