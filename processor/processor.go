@@ -204,7 +204,7 @@ func (p *Processor) message(rec extendedRecord, prediction float64) error {
 
 	p.l.Logf("INFO sending message to the user: %q", userID)
 
-	message := fmt.Sprintf("%s\n\nPrice: %f \nPrediction: %f", rec.URL, rec.Price, prediction)
+	message := fmt.Sprintf("%s\n\nPrice: %.0f \nPrediction: %.0f", rec.URL, rec.Price, prediction)
 	payload := botRequest{
 		ChatID: userID,
 		Text:   message,
