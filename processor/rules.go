@@ -43,6 +43,16 @@ var (
 		"los altos":                          true,
 		"healdsburg / windsor":               true,
 		"oakland hills / mills":              true,
+		"walnut creek":                       true,
+		"daly city":                          true,
+		"santa rosa":                         true,
+		"sonoma":                             true,
+		"albany / el cerrito":                true,
+		"napa county":                        true,
+		"east palo alto":                     true,
+		"menlo park":                         true,
+		"santa cruz":                         true,
+		"rohnert pk / cotati":                true,
 	}
 )
 
