@@ -1,7 +1,7 @@
 package processor
 
 const (
-	threshold = 500
+	threshold = 600
 	maxPrice  = 3500
 	minPrice  = 2000
 )
@@ -19,6 +19,9 @@ var (
 		"oakland downtown":                   true,
 		"oakland piedmont / montclair":       true,
 		"oakland lake merritt / grand":       true,
+		"Oakland":                            true,
+		"alameda":                            true,
+		"morgan hill":                        true,
 		"emeryville":                         true,
 		"los gatos":                          true,
 		"redwood city":                       true,
@@ -53,6 +56,8 @@ var (
 		"menlo park":                         true,
 		"santa cruz":                         true,
 		"rohnert pk / cotati":                true,
+		"campbell":                           true,
+		"vallejo / benicia":                  true,
 	}
 )
 
