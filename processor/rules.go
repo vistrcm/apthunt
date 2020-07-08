@@ -58,6 +58,9 @@ var (
 		"rohnert pk / cotati":                true,
 		"campbell":                           true,
 		"vallejo / benicia":                  true,
+		"milpitas":                           true,
+		"Santa Clara":                        true,
+		"south san francisco":                true,
 	}
 )
 
