@@ -122,20 +122,18 @@ def main():
     # We can use a with statement to ensure threads are cleaned up promptly
     with futures.ThreadPoolExecutor(max_workers=6) as executor:
         # Start the load operations and mark each future with its item
-        future_to_url = {executor.submit(process_item, table_name, item, counter): item for item in
-                         data_retrieve(table_name)}
+        future_to_item = {executor.submit(process_item, table_name, item, counter): item for item in
+                          data_retrieve(table_name)}
         completed = 0
-        for future in concurrent.futures.as_completed(future_to_url):
+        for future in concurrent.futures.as_completed(future_to_item):
             completed += 1
             print(f"completed: {completed}")
 
-            item = future_to_url[future]
+            item = future_to_item[future]
             try:
-                data = future.result()
+                _ = future.result()
             except Exception as exc:
                 print('%r generated an exception: %s' % (item, exc))
-            else:
-                print('%r page is %d bytes' % (item, len(data)))
 
 
 if __name__ == "__main__":
