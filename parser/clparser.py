@@ -64,10 +64,9 @@ def post_removed(post_body):
     return False
 
 
-def get_bedrooms(result):
+def get_bedrooms(housing):
     """parse amount of bedrooms from 'housing' field"""
     bedrooms = None
-    housing = result["housing"]
     # bedrooms
     match = re.search(r'(\d+)br\s.*', housing)
     if match:
@@ -179,7 +178,7 @@ def parse_page(page_url):
         result["notices"] = [n.text for n in userbody.find("ul.notices", first=True).find("li")]
 
     # additional fields
-    result["bedrooms"] = get_bedrooms(result)
+    result["bedrooms"] = get_bedrooms(result["housing"])
     result["area"] = get_area(result)
     result["type"] = get_type(result)
     result["catsok"] = "cats are OK - purrr" in result.get("attrs", [])
