@@ -68,7 +68,7 @@ def get_bedrooms(housing):
     """parse amount of bedrooms from 'housing' field"""
     bedrooms = None
     # bedrooms
-    match = re.search(r'(\d+)br\s.*', housing)
+    match = re.search(r'(\d+)br.*', housing)
     if match:
         bedrooms = float(match.group(1))
     return bedrooms
