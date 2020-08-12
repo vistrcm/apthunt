@@ -4,18 +4,25 @@ import time
 import unittest
 from decimal import Decimal
 from json.decoder import JSONDecodeError
+from unittest import TestCase
 
 import boto3
 from aws_xray_sdk import global_sdk_config
 from moto import mock_sqs
 
-from clparser import parse_request_body
+from clparser import parse_request_body, get_bedrooms
 from handler import prepare4dynamo, que_thumbs
 
 global_sdk_config.set_sdk_enabled(False)
 
 
 class TestParser(unittest.TestCase):
+
+    def test_get_bedrooms_full(self):
+        self.assertEqual(get_bedrooms("'2br - 1000ft2'"), 2.0)
+
+    def test_get_bedrooms_no_area(self):
+        self.assertEqual(get_bedrooms("1br"), 1.0)
 
     def test_parse_body_empty(self):
         with self.assertRaises(JSONDecodeError):
@@ -72,7 +79,7 @@ class TestHandler(unittest.TestCase):
             ],
         }
 
-        expected = ['INFO:root:thumb SQS response message id:'] # 3 elements with similar start
+        expected = ['INFO:root:thumb SQS response message id:']  # 3 elements with similar start
         # only logs here
         with self.assertLogs() as cm:
             que_thumbs(sqs_client, queue_url, test_data)
