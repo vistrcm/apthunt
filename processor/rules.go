@@ -61,6 +61,7 @@ var (
 		"milpitas":                           true,
 		"Santa Clara":                        true,
 		"south san francisco":                true,
+		"san carlos":                         true,
 	}
 )
 
