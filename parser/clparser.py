@@ -3,6 +3,7 @@ import json
 import re
 import sys
 
+from aws_xray_sdk import global_sdk_config
 from aws_xray_sdk.core import xray_recorder
 from requests_html import HTMLSession, HTMLResponse
 
@@ -228,6 +229,8 @@ def get_page(page_url):
 
 
 if __name__ == "__main__":
+    global_sdk_config.set_sdk_enabled(False)
+
     PAGE = sys.argv[1]
     try:
         print(json.dumps(parse_page(PAGE), indent=4))
