@@ -4,13 +4,17 @@ import unittest
 from json.decoder import JSONDecodeError
 
 from aws_xray_sdk import global_sdk_config
+from requests_html import HTML
 
-from clparser import parse_request_body, get_bedrooms
+from clparser import parse_request_body, get_bedrooms, parse_price
 
 global_sdk_config.set_sdk_enabled(False)
 
 
 class TestParser(unittest.TestCase):
+    def test_parse_price(self):
+        doc = 'xxxxxx<span class="price">$2,895</span> xxxxxxx'
+        self.assertEqual(parse_price(HTML(html=doc)), {'price_text': '$2,895', 'price': 2895})
 
     def test_get_bedrooms_full(self):
         self.assertEqual(get_bedrooms("'2br - 1000ft2'"), 2.0)
