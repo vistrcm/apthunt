@@ -20,7 +20,11 @@ resource "aws_lambda_function" "parser" {
       PROCESSOR_SQS_QUEUE_URL = data.aws_sqs_queue.processor-input.url
     }
   }
-  tags = var.tags
+
+  tags = merge(var.tags,
+    {
+      "source_code_hash" = filebase64sha256(var.archive),
+  })
 }
 
 resource "aws_cloudwatch_log_group" "lambda_logs" {

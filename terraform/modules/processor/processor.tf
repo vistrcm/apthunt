@@ -28,7 +28,10 @@ resource "aws_lambda_function" "processor" {
     }
   }
 
-  tags = var.tags
+  tags = merge(var.tags,
+    {
+      "source_code_hash" = filebase64sha256(data.archive_file.lambda_zip.output_path),
+  })
 }
 
 resource "aws_cloudwatch_log_group" "processor_logs" {
