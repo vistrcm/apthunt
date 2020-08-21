@@ -127,13 +127,16 @@ func (p *Processor) ProcessMessage(data string) error {
 		// ceil a price
 		prediction.Price = ceil(prediction.Price, ceilUnit)
 
-		if worthNotification(extRec, prediction) {
-			p.l.Logf("INFO interesting result")
+		if w := worthNotification(extRec, prediction); w != Interesting {
+			p.l.Logf("INFO %s, %s", w, extRec.URL)
+			return nil
+		}
 
-			err := p.message(extRec, prediction.Price)
-			if err != nil {
-				return fmt.Errorf("error sending message: %w", err)
-			}
+		p.l.Logf("INFO interesting record: %s", extRec.URL)
+
+		err := p.message(extRec, prediction.Price)
+		if err != nil {
+			return fmt.Errorf("error sending message: %w", err)
 		}
 	}
 
@@ -151,10 +154,6 @@ func (p *Processor) predict(r record) ([]extendedRecord, error) {
 	jsonStr, err := json.Marshal(listRec)
 	if err != nil {
 		return nil, fmt.Errorf("can't marshal. %w", err)
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("error converting record to bytes: %w", err)
 	}
 
 	p.l.Logf("INFO request to predictor: %q", jsonStr)

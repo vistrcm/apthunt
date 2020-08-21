@@ -1,10 +1,24 @@
 package processor
 
 const (
-	threshold = 600
+	threshold = 300
 	maxPrice  = 3500
-	minPrice  = 2000
+	minPrice  = 1500
 )
+
+type Interest int
+
+const (
+	Interesting Interest = iota
+	ClosePrediction
+	SkipDistrict
+	TooExpensive
+	TooCheap
+)
+
+func (i Interest) String() string {
+	return [...]string{"Interesting", "ClosePrediction", "SkipDistrict", "TooExpensive", "TooCheap"}[i]
+}
 
 var (
 	// emulate sets with map of string->bool
@@ -66,26 +80,26 @@ var (
 )
 
 // worthNotification rejects non-interesting, expensive items.
-func worthNotification(target, prediction extendedRecord) bool {
+func worthNotification(target, prediction extendedRecord) Interest {
 	// prediction is close to price
 	if (prediction.Price - target.Price) < threshold {
-		return false
+		return ClosePrediction
 	}
 
 	// skip some districts
 	if skipDistrict[target.District] {
-		return false
+		return SkipDistrict
 	}
 
 	// too expensive
 	if target.Price > maxPrice {
-		return false
+		return TooExpensive
 	}
 
 	// too cheap. strange
 	if target.Price < minPrice {
-		return false
+		return TooCheap
 	}
 
-	return true
+	return Interesting
 }
