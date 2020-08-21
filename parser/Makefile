@@ -23,7 +23,12 @@ pycodestyle: handler.py clparser.py
 pylint: handler.py clparser.py
 	pipenv run pylint handler.py clparser.py
 
-check: pycodestyle pylint
+.PHONY: mypy
+mypy: handler.py clparser.py
+	pipenv run mypy handler.py clparser.py
+
+.PHONY: check
+check: mypy pycodestyle pylint
 
 test-sam: check package lxml
 	./test-sam.sh
