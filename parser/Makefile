@@ -101,5 +101,5 @@ test_curl:
 	curl -v -X POST -d "wowowowo: $(TESTDATE)" https://fjo9r88qg0.execute-api.us-west-1.amazonaws.com/prod/apthuntparser
 
 .PHONY: deploy
-deploy: clean test zip
+deploy: test zip
 	cd ../terraform && terraform apply
