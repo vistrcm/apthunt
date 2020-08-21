@@ -8,8 +8,8 @@ from decimal import Decimal
 from json.decoder import JSONDecodeError
 
 import boto3
-from aws_xray_sdk.core import patch
-from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch  # type: ignore
+from aws_xray_sdk.core import xray_recorder  # type: ignore
 
 from clparser import parse_request_body, parse_page, PostRemovedException, CL404Exception
 

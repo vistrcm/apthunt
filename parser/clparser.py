@@ -5,9 +5,9 @@ import re
 import sys
 from typing import Dict, Union
 
-from aws_xray_sdk import global_sdk_config
-from aws_xray_sdk.core import xray_recorder
-from requests_html import HTMLSession, HTMLResponse
+from aws_xray_sdk import global_sdk_config  # type: ignore
+from aws_xray_sdk.core import xray_recorder  # type: ignore
+from requests_html import HTMLSession, HTMLResponse  # type: ignore
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
