@@ -7,11 +7,13 @@ name = "pypi"
 requests-html = "*"
 aws-xray-sdk = "*"
 "boto3" = "*"
+idna = "*"
 
 [dev-packages]
 pycodestyle = "*"
 pylint = "*"
 moto = "*"
+mypy = "*"
 
 [requires]
 python_version = "3"
