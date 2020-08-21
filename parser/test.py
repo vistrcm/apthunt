@@ -4,7 +4,6 @@ import time
 import unittest
 from decimal import Decimal
 from json.decoder import JSONDecodeError
-from unittest import TestCase
 
 import boto3
 from aws_xray_sdk import global_sdk_config
