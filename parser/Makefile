@@ -28,7 +28,7 @@ check: pycodestyle pylint
 test-sam: check package lxml
 	./test-sam.sh
 
-test-py: test.py
+test-py: test_clparser.py test_handler.py
 	pipenv run python -m unittest discover -v
 
 test: check test-py test-sam
