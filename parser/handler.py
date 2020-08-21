@@ -71,8 +71,9 @@ def handler(event, context):
         resp = put_item(body)
     except Exception as ex:  # pylint: disable=broad-except
         msg = "got exception doing put_item with '{}': {}".format(body, ex)
-        LOGGER.warning(msg, exc_info=True)
-        return respond(ValueError(msg), code=500)
+        LOGGER.error(msg, exc_info=True)
+        # return respond(ValueError(msg), code=500)
+        raise ValueError(msg)
 
     LOGGER.info("response: '%s'", resp)
     return respond(None, resp)
