@@ -4,10 +4,12 @@ resource "aws_lambda_function" "parser" {
   description   = "parser of new entries"
   handler       = "handler.handler"
   memory_size   = 128
-  filename      = var.archive
-  role          = aws_iam_role.parser-lambda.arn
-  runtime       = "python3.6"
-  publish       = false
+  #  filename      = var.archive
+  s3_bucket = aws_s3_bucket.apthunt.bucket
+  s3_key    = aws_s3_bucket_object.parser.key
+  role      = aws_iam_role.parser-lambda.arn
+  runtime   = "python3.6"
+  publish   = false
   tracing_config {
     mode = "Active"
   }
@@ -36,4 +38,27 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 
 data "aws_sqs_queue" "processor-input" {
   name = var.sqs_processor_name
+}
+
+resource "aws_s3_bucket" "apthunt" {
+  bucket = "apthunt.lambdas"
+  acl    = "private"
+  tags   = var.tags
+}
+
+resource "aws_s3_bucket_object" "parser" {
+  bucket = aws_s3_bucket.apthunt.bucket
+  key    = "files/apthunt/parser.zip"
+  source = var.archive
+  etag   = filemd5(var.archive)
+  tags   = var.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "apthunt" {
+  bucket = aws_s3_bucket.apthunt.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
