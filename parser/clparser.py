@@ -1,11 +1,15 @@
 """parser module for parsing data from provided urls"""
 import json
+import locale
 import re
 import sys
+from typing import Dict, Union
 
 from aws_xray_sdk import global_sdk_config
 from aws_xray_sdk.core import xray_recorder
 from requests_html import HTMLSession, HTMLResponse
+
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 class PostRemovedException(Exception):
@@ -35,13 +39,14 @@ def parse_attr_groups(attrgroups):
     return attrs
 
 
-def parse_price(posting_title_text):
+def parse_price(posting_title_text) -> Dict[str, Union[str, int]]:
     """parse price"""
     price_data = {}
     price_element = posting_title_text.find(".price", first=True)
     if price_element:
         price_text = price_element.text
-        price = int(price_text.strip().replace("$", ""))
+        no_sign = price_text.strip().strip("$")
+        price = locale.atoi(no_sign)
         price_data["price_text"] = price_text
         price_data["price"] = price
 
