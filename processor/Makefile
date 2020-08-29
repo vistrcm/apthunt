@@ -5,7 +5,7 @@ precommit: fmt test lint
 
 .PHONY: fmt
 fmt:
-	gofumpt -w ./ && gofumports -w ./ && gci -w .
+	gofumpt -w ./ && gofumports -w ./
 
 .PHONY: test
 test:
