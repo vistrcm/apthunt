@@ -1,4 +1,5 @@
 """lambda created to get some urls as input, retrieve URL content, parse it and save."""
+import copy
 import hashlib
 import json
 import logging
@@ -167,7 +168,11 @@ def get_md5(data):
 
 def generate_id(item):
     """generate id for the item"""
-    gen_id = get_md5(item)
+    # let's create copy of item to exclude URL from getting md5
+    new = copy.deepcopy(item)
+    del new["PostUrl"]
+
+    gen_id = get_md5(new)
     LOGGER.debug("generated id '%s' for the item: %s", gen_id, item)
     return gen_id.hexdigest()
 
