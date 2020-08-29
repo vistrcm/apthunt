@@ -2,6 +2,7 @@ package processor
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-pkgz/lgr"
 )
@@ -111,12 +113,15 @@ func ceil(x, unit float64) float64 {
 }
 
 func (p *Processor) ProcessMessage(data string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel() // releases resources if slowOperation completes before timeout elapses
+
 	extRec, err := getExtRecord([]byte(data))
 	if err != nil {
 		return fmt.Errorf("error getting record: %w", err)
 	}
 
-	predictions, err := p.predict(extRec.record)
+	predictions, err := p.predict(ctx, extRec.record)
 	if err != nil {
 		return fmt.Errorf("error during prediction: %w", err)
 	}
@@ -129,12 +134,13 @@ func (p *Processor) ProcessMessage(data string) error {
 
 		if w := worthNotification(extRec, prediction); w != Interesting {
 			p.l.Logf("INFO %s, %s", w, extRec.URL)
+
 			return nil
 		}
 
 		p.l.Logf("INFO interesting record: %s", extRec.URL)
 
-		err := p.message(extRec, prediction.Price)
+		err := p.message(ctx, extRec, prediction.Price)
 		if err != nil {
 			return fmt.Errorf("error sending message: %w", err)
 		}
@@ -143,7 +149,7 @@ func (p *Processor) ProcessMessage(data string) error {
 	return nil
 }
 
-func (p *Processor) predict(r record) ([]extendedRecord, error) {
+func (p *Processor) predict(ctx context.Context, r record) ([]extendedRecord, error) {
 	predictorURL, err := getPredictorURL()
 	if err != nil {
 		return nil, err
@@ -158,7 +164,7 @@ func (p *Processor) predict(r record) ([]extendedRecord, error) {
 
 	p.l.Logf("INFO request to predictor: %q", jsonStr)
 
-	req, err := http.NewRequest("POST", predictorURL, bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequestWithContext(ctx, "POST", predictorURL, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -190,7 +196,7 @@ func (p *Processor) predict(r record) ([]extendedRecord, error) {
 	return rec, nil
 }
 
-func (p *Processor) message(rec extendedRecord, prediction float64) error {
+func (p *Processor) message(ctx context.Context, rec extendedRecord, prediction float64) error {
 	botURL, err := getBotURL()
 	if err != nil {
 		return err
@@ -216,7 +222,7 @@ func (p *Processor) message(rec extendedRecord, prediction float64) error {
 		return fmt.Errorf("error converting payload %+v to bytes: %w", payload, err)
 	}
 
-	req, err := http.NewRequest("POST", botURL, bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequestWithContext(ctx, "POST", botURL, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return fmt.Errorf("error creating request to bot: %w", err)
 	}
