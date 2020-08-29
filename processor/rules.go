@@ -1,9 +1,9 @@
 package processor
 
 const (
-	threshold = 300
+	threshold = 600
 	maxPrice  = 3500
-	minPrice  = 1500
+	minPrice  = 2000
 )
 
 type Interest int
