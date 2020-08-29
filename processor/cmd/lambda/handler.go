@@ -22,12 +22,12 @@ var (
 	httpClient *http.Client //nolint:gochecknoglobals
 )
 
-//httpTimeout timeout for http calls in seconds.
+// httpTimeout timeout for http calls in seconds.
 const httpTimeout = 10
 
-//init function required for AWS lambda optimization.
+// init function required for AWS lambda optimization.
 func init() { //nolint:gochecknoinits
-	//config xray
+	// config xray
 	err := xray.Configure(xray.Config{LogLevel: "info"})
 	if err != nil {
 		panic(fmt.Sprintf("cant' configure xray: %v", err))
@@ -41,7 +41,7 @@ func init() { //nolint:gochecknoinits
 	}
 }
 
-//Handler handler function for AWS Lambda.
+// Handler handler function for AWS Lambda.
 func Handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	// Start a subsegment
 	ctx, seg := xray.BeginSubsegment(ctx, "processor")

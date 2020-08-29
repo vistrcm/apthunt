@@ -49,10 +49,10 @@ type botRequest struct {
 	Text   string `json:"text"`
 }
 
-//ErrBadBotResponse indicates failure of getting url.
+// ErrBadBotResponse indicates failure of getting url.
 var ErrBadBotResponse = errors.New("bad bot response")
 
-//ErrNoRequiredEnvVar indicates absence of required environment variable.
+// ErrNoRequiredEnvVar indicates absence of required environment variable.
 var ErrNoRequiredEnvVar = errors.New("no required environment variable")
 
 func getExtRecord(data []byte) (extendedRecord, error) {
@@ -75,27 +75,27 @@ func getExtRecords(data []byte) ([]extendedRecord, error) {
 	return rec, nil
 }
 
-//Processor message processor: parse message, predict price and send message if worthNotification().
+// Processor message processor: parse message, predict price and send message if worthNotification().
 type Processor struct {
 	l          *lgr.Logger
 	httpClient *http.Client
 }
 
-//WithLogger optional function to set logger.
+// WithLogger optional function to set logger.
 func WithLogger(l *lgr.Logger) func(*Processor) {
 	return func(processor *Processor) {
 		processor.l = l
 	}
 }
 
-//WithHTTPClient set http client for the processor.
+// WithHTTPClient set http client for the processor.
 func WithHTTPClient(c *http.Client) func(*Processor) {
 	return func(processor *Processor) {
 		processor.httpClient = c
 	}
 }
 
-//NewProcessor builds new processor.
+// NewProcessor builds new processor.
 func NewProcessor(options ...func(*Processor)) Processor {
 	proc := Processor{}
 
@@ -149,7 +149,7 @@ func (p *Processor) predict(r record) ([]extendedRecord, error) {
 		return nil, err
 	}
 
-	var listRec = []record{r} // list of records from single record. Required for predictor
+	listRec := []record{r} // list of records from single record. Required for predictor
 
 	jsonStr, err := json.Marshal(listRec)
 	if err != nil {
@@ -211,7 +211,7 @@ func (p *Processor) message(rec extendedRecord, prediction float64) error {
 		Text:   message,
 	}
 
-	var jsonStr, marshalErr = json.Marshal(payload)
+	jsonStr, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
 		return fmt.Errorf("error converting payload %+v to bytes: %w", payload, err)
 	}
