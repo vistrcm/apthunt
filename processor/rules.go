@@ -84,6 +84,19 @@ var (
 		"Santa Clara":                        true,
 		"south san francisco":                true,
 		"san carlos":                         true,
+		"Lake Merritt Oakland":               true,
+		"dublin / pleasanton / livermore":    true,
+		"burlingame":                         true,
+		"oakland rockridge / claremont":      true,
+		"Millbrae":                           true,
+		"Downtown Oakland":                   true,
+		"fremont / union city / newark":      true,
+		"san rafael":                         true,
+		"West Oakland":                       true,
+		"North Oakland":                      true,
+		"petaluma":                           true,
+		"woodside":                           true,
+		"portola valley":                     true,
 	}
 )
 
