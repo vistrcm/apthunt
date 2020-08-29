@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/vistrcm/apthunt/processor"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/go-pkgz/lgr"
+	"github.com/vistrcm/apthunt/processor"
 )
 
 //global variables. Yes it is bad in general. This is AWS lambda handler and it is a good practice to have globals
