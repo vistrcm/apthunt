@@ -14,10 +14,18 @@ const (
 	SkipDistrict
 	TooExpensive
 	TooCheap
+	Studio
 )
 
 func (i Interest) String() string {
-	return [...]string{"Interesting", "ClosePrediction", "SkipDistrict", "TooExpensive", "TooCheap"}[i]
+	return [...]string{
+		"Interesting",
+		"ClosePrediction",
+		"SkipDistrict",
+		"TooExpensive",
+		"TooCheap",
+		"Studio",
+	}[i]
 }
 
 var (
@@ -99,6 +107,11 @@ func worthNotification(target, prediction extendedRecord) Interest {
 	// too cheap. strange
 	if target.Price < minPrice {
 		return TooCheap
+	}
+
+	//studio
+	if target.Bedrooms < 1 {
+		return Studio
 	}
 
 	return Interesting
