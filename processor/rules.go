@@ -98,6 +98,9 @@ var skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 	"portola valley":                     true,
 	"Campbell":                           true,
 	"belmont":                            true,
+	"San Bruno":                          true,
+	//	excludes in SF
+	"SOMA / south beach": true,
 }
 
 // worthNotification rejects non-interesting, expensive items.
