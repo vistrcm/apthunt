@@ -213,8 +213,9 @@ func (p *Processor) message(ctx context.Context, rec extendedRecord, prediction 
 	message := fmt.Sprintf(""+
 		"%s\n\ndistrict: %s\n"+
 		"bedrooms: %.0f \n"+
+		"type: %s\n"+
 		"price: %.0f [%.0f/%.0f]",
-		rec.URL, rec.District, rec.Bedrooms, rec.Price, prediction, difference)
+		rec.URL, rec.District, rec.Bedrooms, rec.Type, rec.Price, prediction, difference)
 	payload := botRequest{
 		ChatID: userID,
 		Text:   message,
