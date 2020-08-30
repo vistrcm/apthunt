@@ -97,6 +97,7 @@ var skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 	"woodside":                           true,
 	"portola valley":                     true,
 	"Campbell":                           true,
+	"belmont":                            true,
 }
 
 // worthNotification rejects non-interesting, expensive items.
