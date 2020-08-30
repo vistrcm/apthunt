@@ -210,28 +210,44 @@ func (p *Processor) message(ctx context.Context, rec extendedRecord, prediction 
 	p.l.Logf("INFO sending message to the user: %q", userID)
 
 	difference := rec.Price - prediction
-	message := fmt.Sprintf("%s\n\n%s\nBedrooms: %.0f \nPrice: %.0f [%.0f/%.0f]",
+	message := fmt.Sprintf(""+
+		"%s\n\ndistrict: %s\n"+
+		"bedrooms: %.0f \n"+
+		"price: %.0f [%.0f/%.0f]",
 		rec.URL, rec.District, rec.Bedrooms, rec.Price, prediction, difference)
 	payload := botRequest{
 		ChatID: userID,
 		Text:   message,
 	}
 
+	body, botResp, err := p.botRequest(ctx, payload, botURL)
+	if err != nil {
+		return err
+	}
+
+	if !botResp.Ok {
+		return fmt.Errorf("bot response is not ok %q, %w", body, ErrBadBotResponse)
+	}
+
+	return nil
+}
+
+func (p *Processor) botRequest(ctx context.Context, payload botRequest, botURL string) ([]byte, botResponse, error) {
 	jsonStr, marshalErr := json.Marshal(payload)
 	if marshalErr != nil {
-		return fmt.Errorf("error converting payload %+v to bytes: %w", payload, err)
+		return nil, botResponse{}, fmt.Errorf("error converting payload %+v to bytes: %w", payload, marshalErr)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", botURL, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		return fmt.Errorf("error creating request to bot: %w", err)
+		return nil, botResponse{}, fmt.Errorf("error creating request to bot: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("error on http request: %w", err)
+		return nil, botResponse{}, fmt.Errorf("error on http request: %w", err)
 	}
 
 	defer func() {
@@ -243,20 +259,16 @@ func (p *Processor) message(ctx context.Context, rec extendedRecord, prediction 
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("error reading bot response body: %w", err)
+		return nil, botResponse{}, fmt.Errorf("error reading bot response body: %w", err)
 	}
 
 	var botResp botResponse
 
 	if err := json.Unmarshal(body, &botResp); err != nil {
-		return fmt.Errorf("error unmarshaling bot response %q: %w", body, err)
+		return nil, botResponse{}, fmt.Errorf("error unmarshaling bot response %q: %w", body, err)
 	}
 
-	if !botResp.Ok {
-		return fmt.Errorf("bot response is not ok %q, %w", body, ErrBadBotResponse)
-	}
-
-	return nil
+	return body, botResp, nil
 }
 
 func getUserID() (string, error) {
