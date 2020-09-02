@@ -99,6 +99,11 @@ var skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 	"Campbell":                           true,
 	"belmont":                            true,
 	"San Bruno":                          true,
+	"foster city":                        true,
+	"oakland west":                       true,
+	"tenderloin":                         true,
+	"richmond / point / annex":           true,
+
 	//	excludes in SF
 	"SOMA / south beach": true,
 }
