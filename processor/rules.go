@@ -2,7 +2,7 @@ package processor
 
 const (
 	threshold = 600
-	maxPrice  = 3500
+	maxPrice  = 3000
 	minPrice  = 2000
 )
 
