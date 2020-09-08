@@ -15,6 +15,7 @@ const (
 	TooExpensive
 	TooCheap
 	Studio
+	Furnished
 )
 
 func (i Interest) String() string {
@@ -25,6 +26,7 @@ func (i Interest) String() string {
 		"TooExpensive",
 		"TooCheap",
 		"Studio",
+		"Furnished",
 	}[i]
 }
 
@@ -136,6 +138,12 @@ func worthNotification(target, prediction extendedRecord) Interest {
 	if target.Bedrooms < 1 {
 		return Studio
 	}
+
+	// furnhished
+	if target.Furnished {
+		return Furnished
+	}
+
 
 	return Interesting
 }
