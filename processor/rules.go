@@ -104,8 +104,10 @@ var skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 	"oakland west":                       true,
 	"tenderloin":                         true,
 	"richmond / point / annex":           true,
+	"capitola":                           true,
 	//	excludes in SF
-	"SOMA / south beach": true,
+	"SOMA / south beach":          true,
+	"downtown / civic / van ness": true,
 }
 
 // worthNotification rejects non-interesting, expensive items.
