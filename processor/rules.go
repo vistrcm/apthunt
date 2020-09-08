@@ -104,7 +104,7 @@ var skipDistrict = map[string]bool{ //nolint: gochecknoglobals
 	"oakland west":                       true,
 	"tenderloin":                         true,
 	"richmond / point / annex":           true,
-	"capitola":                           true,
+	"capitola":                           true, //nolint: misspell // this is not a misspell
 	//	excludes in SF
 	"SOMA / south beach":          true,
 	"downtown / civic / van ness": true,
