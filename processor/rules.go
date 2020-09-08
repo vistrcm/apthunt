@@ -144,6 +144,5 @@ func worthNotification(target, prediction extendedRecord) Interest {
 		return Furnished
 	}
 
-
 	return Interesting
 }
