@@ -4,6 +4,7 @@ const (
 	threshold = 1000
 	maxPrice  = 3000
 	minPrice  = 2000
+	minRooms  = 2
 )
 
 type Interest int
@@ -14,7 +15,7 @@ const (
 	SkipDistrict
 	TooExpensive
 	TooCheap
-	Studio
+	LowRooms
 	Furnished
 )
 
@@ -25,7 +26,7 @@ func (i Interest) String() string {
 		"SkipDistrict",
 		"TooExpensive",
 		"TooCheap",
-		"Studio",
+		"LowRooms",
 		"Furnished",
 	}[i]
 }
@@ -135,8 +136,8 @@ func worthNotification(target, prediction extendedRecord) Interest {
 	}
 
 	// studio
-	if target.Bedrooms < 1 {
-		return Studio
+	if target.Bedrooms < minRooms {
+		return LowRooms
 	}
 
 	// furnhished
