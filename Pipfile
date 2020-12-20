@@ -1,23 +1,21 @@
 [[source]]
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
 requests-html = "*"
 aws-xray-sdk = "*"
-"boto3" = "*"
+boto3 = "*"
 flask = "*"
 jupyter = "*"
 pandas = "*"
-fastai2 = "*"
 
 [dev-packages]
 pylint = "*"
 pycodestyle = "*"
-ipython = "*"
 flake8 = "*"
 moto = "*"
 
 [requires]
-python_version = "3"
+python_version = "3.8"
