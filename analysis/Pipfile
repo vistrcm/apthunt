@@ -9,6 +9,7 @@ pandas = "*"
 boto3 = "*"
 numpy = "*"
 seaborn = "*"
+fastai = "*"
 
 [dev-packages]
 memory-profiler = "*"
