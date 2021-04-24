@@ -74,7 +74,7 @@ def handler(event, context):
         msg = "got exception doing put_item with '{}': {}".format(body, ex)
         LOGGER.error(msg, exc_info=True)
         # return respond(ValueError(msg), code=500)
-        raise ValueError(msg)
+        raise ValueError(msg) from ex
 
     LOGGER.info("response: '%s'", resp)
     return respond(None, resp)
